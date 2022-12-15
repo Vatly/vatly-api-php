@@ -95,7 +95,7 @@ class SpyHttpClient implements HttpClientInterface
         ?string $httpBody
     ): void {
         $sanitizedHeaders = array_filter($headers, function ($key) {
-            return !in_array($key, [
+            return ! in_array($key, [
                 'Accept',
                 'Authorization',
                 'User-Agent',
