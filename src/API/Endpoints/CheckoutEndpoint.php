@@ -9,6 +9,8 @@ use Vatly\API\Resources\Checkout;
 
 class CheckoutEndpoint extends BaseEndpoint
 {
+    protected string $resourcePath = "checkouts";
+
     /**
      * @inheritDoc
      */

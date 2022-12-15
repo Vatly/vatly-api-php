@@ -173,7 +173,7 @@ class VatlyApiClient
     public function performHttpCallToFullUrl($httpMethod, $url, $httpBody = null): ?object
     {
         if (empty($this->apiKey)) {
-            throw new ApiException("You have not set an API key or OAuth access token. Please use setApiKey() to set the API key.");
+            throw new ApiException("You have not set an API key. Please use setApiKey() to set the API key.");
         }
 
         $headers = [

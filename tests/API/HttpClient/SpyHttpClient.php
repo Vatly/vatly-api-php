@@ -40,27 +40,76 @@ class SpyHttpClient implements HttpClientInterface
         array $headers,
         string $httpBody
     ): bool {
-        return count(array_filter($this->recordedSends, function ($item) use ($httpMethod, $url, $headers, $httpBody) {
+        $sanitizedHttpBody = preg_replace('/\s+/', ' ', trim($httpBody));
+        $sanitizedHttpBody = str_replace(', "', ',"', $sanitizedHttpBody);
+
+        return count(array_filter($this->recordedSends, function ($item) use ($httpMethod, $url, $headers, $sanitizedHttpBody) {
             return $item['httpMethod'] === $httpMethod
                 && $item['url'] === $url
                 && $item['headers'] === $headers
-                && $item['httpBody'] === $httpBody;
+                && $item['httpBody'] === $sanitizedHttpBody;
         })) > 0;
+    }
+
+    /**
+     * Whether the provided call was the only call that was made, and made only once.
+     *
+     * @param string $httpMethod
+     * @param string $url
+     * @param array $headers
+     * @param string $httpBody
+     * @return bool
+     */
+    public function wasSentOnly(
+        string $httpMethod,
+        string $url,
+        array $headers,
+        string $httpBody
+    ): bool {
+        if ($this->countRecordedSends() !== 1) {
+            return false;
+        }
+
+        return $this->wasSent(
+            $httpMethod,
+            $url,
+            $headers,
+            $httpBody,
+        );
+    }
+
+    public function countRecordedSends(): int
+    {
+        return count($this->recordedSends);
     }
 
     public function recordedSends(): array
     {
-        return $this->recordedSends();
+        return $this->recordedSends;
     }
 
-    private function recordSend($httpMethod, $url, $headers, $httpBody): void
-    {
+    private function recordSend(
+        string $httpMethod,
+        string $url,
+        array $headers,
+        ?string $httpBody
+    ): void {
+        $sanitizedHeaders = array_filter($headers, function ($key) {
+            return !in_array($key, [
+                'Accept',
+                'Authorization',
+                'User-Agent',
+                'Content-Type',
+                'X-Vatly-Client-Info',
+            ]);
+        }, ARRAY_FILTER_USE_KEY);
+
         $this->recordedSends[] = [
             'time' => time(),
             'httpMethod' => $httpMethod,
             'url' => $url,
-            '$headers' => $headers,
-            '$httpBody' => $httpBody,
+            'headers' => $sanitizedHeaders,
+            'httpBody' => $httpBody,
         ];
     }
 

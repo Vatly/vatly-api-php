@@ -27,6 +27,14 @@ abstract class BaseTestCase extends TestCase
 
         $this->httpClient = new SpyHttpClient;
         $this->client = new VatlyApiClient(new SpyHttpClientFactory($this->httpClient));
+        $this->client->setApiKey('test_dummy_dummy_dummy_dummy');
+    }
+
+    public function setClientSendReturnObject(object $returnObject): self
+    {
+        $this->httpClient->setSendReturnObject($returnObject);
+
+        return $this;
     }
 
     public function assertWasSent(
