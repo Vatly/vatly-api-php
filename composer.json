@@ -1,11 +1,18 @@
 {
-    "name": "vatly/vatly-php",
+    "name": "vatly/vatly-api-php",
     "description": "Vatly API client for PHP",
     "keywords": [
         "vatly",
-        "vatly-php"
+        "vatly-api-php",
+        "php",
+        "billing",
+        "payments",
+        "creditcard",
+        "iDEAL",
+        "PayPal",
+        "Apple Pay"
     ],
-    "homepage": "https://github.com/vatly/vatly-php",
+    "homepage": "https://www.vatly.com",
     "license": "MIT",
     "authors": [
         {

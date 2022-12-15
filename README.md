@@ -1,8 +1,8 @@
 # Vatly API client for PHP
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/vatly/vatly-php.svg?style=flat-square)](https://packagist.org/packages/vatly/vatly-php)
-[![Tests](https://github.com/vatly/vatly-php/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/vatly/vatly-php/actions/workflows/run-tests.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/vatly/vatly-php.svg?style=flat-square)](https://packagist.org/packages/vatly/vatly-php)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/vatly/vatly-api-php.svg?style=flat-square)](https://packagist.org/packages/vatly/vatly-api-php)
+[![Tests](https://github.com/vatly/vatly-api-php/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/vatly/vatly-api-php/actions/workflows/run-tests.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/vatly/vatly-api-php.svg?style=flat-square)](https://packagist.org/packages/vatly/vatly-api-php)
 
 Sell worldwide, today, with Vatly. Dedicated to EU based SAAS merchants and software companies, accept creditcard, PayPal, ApplePay, iDEAL and more.
 
@@ -11,7 +11,7 @@ Sell worldwide, today, with Vatly. Dedicated to EU based SAAS merchants and soft
 You can install the package via composer:
 
 ```bash
-composer require vatly/vatly-php
+composer require vatly/vatly-api-php
 ```
 
 ## Usage
