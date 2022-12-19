@@ -6,4 +6,5 @@ namespace Vatly\API\Resources;
 
 class Checkout extends BaseResource
 {
+    public string $id;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Vatly\Tests\API\HttpClient;
 
+use Vatly\API\Exceptions\DebuggingNotSupportedException;
 use Vatly\API\HttpClient\HttpClientInterface;
 
 class SpyHttpClient implements HttpClientInterface
@@ -40,8 +41,12 @@ class SpyHttpClient implements HttpClientInterface
         array $headers,
         string $httpBody
     ): bool {
-        $sanitizedHttpBody = preg_replace('/\s+/', ' ', trim($httpBody));
-        $sanitizedHttpBody = str_replace(', "', ',"', $sanitizedHttpBody);
+        $sanitizedHttpBody = json_encode(json_decode(
+            $httpBody,
+            false,
+            512,
+            JSON_THROW_ON_ERROR
+        ));
 
         return count(array_filter($this->recordedSends, function ($item) use ($httpMethod, $url, $headers, $sanitizedHttpBody) {
             return $item['httpMethod'] === $httpMethod
@@ -118,13 +123,19 @@ class SpyHttpClient implements HttpClientInterface
         return false;
     }
 
+    /**
+     * @throws \Vatly\API\Exceptions\DebuggingNotSupportedException
+     */
     public function enableDebugging(): void
     {
-        //
+        throw DebuggingNotSupportedException::new();
     }
 
+    /**
+     * @throws \Vatly\API\Exceptions\DebuggingNotSupportedException
+     */
     public function disableDebugging(): void
     {
-        //
+        throw DebuggingNotSupportedException::new();
     }
 }

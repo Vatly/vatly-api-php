@@ -27,7 +27,7 @@ abstract class BaseTestCase extends TestCase
 
         $this->httpClient = new SpyHttpClient;
         $this->client = new VatlyApiClient(new SpyHttpClientFactory($this->httpClient));
-        $this->client->setApiKey('test_dummy_dummy_dummy_dummy');
+        $this->client->setApiKey('test_spy_dummy_dummy_dummy_dummy');
     }
 
     public function setClientSendReturnObject(object $returnObject): self
@@ -47,6 +47,25 @@ abstract class BaseTestCase extends TestCase
 
         $this->assertTrue(
             $this->httpClient->wasSent(
+                $httpMethod,
+                $url,
+                $headers,
+                $httpBody,
+            ),
+            $message,
+        );
+    }
+
+    public function assertWasSentOnly(
+        string $httpMethod,
+        string $url,
+        array $headers,
+        string $httpBody
+    ): void {
+        $message = 'Expected message was not sent.';
+
+        $this->assertTrue(
+            $this->httpClient->wasSentOnly(
                 $httpMethod,
                 $url,
                 $headers,
