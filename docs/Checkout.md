@@ -1,0 +1,31 @@
+# The Vatly Checkout API
+
+
+## Creating a Checkout
+
+```php
+$vatly = new Vatly\Api\VatlyApiClient;
+$vatly->setApiKey('test_your_api_key_here');
+
+
+$checkout = $vatly->checkouts->create([
+    'profileId' => 'profile_id_dummy_foo_bar',
+    'products' => [
+        //
+    ],
+    'redirectUrlSuccess' => 'https://www.sandorian.com/success',
+    'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
+]);
+
+
+```
+
+## Retrieving a Checkout
+
+```php
+$vatly = new Vatly\Api\VatlyApiClient;
+$vatly->setApiKey('test_your_api_key_here');
+
+
+$checkout = $vatly->checkouts->get('checkout_your_checkout_id_here');
+```
