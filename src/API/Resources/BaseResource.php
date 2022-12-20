@@ -14,6 +14,8 @@ abstract class BaseResource
      */
     protected VatlyApiClient $apiClient;
 
+    public string $id;
+
     public function __construct(VatlyApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
