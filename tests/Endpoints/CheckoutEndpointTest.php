@@ -18,8 +18,14 @@ class CheckoutEndpointTest extends BaseEndpointTest
 
         $checkout = $this->client->checkouts->create([
             'profileId' => 'profile_123', // TODO check if this is required at this moment
-            'products' => [
-                // TODO
+            'products' => [ // list of one-off-product IDs and subscription plan IDs
+                [
+                    'id' => 'one_off_product_abc_987',
+                ],
+                [
+                    'id' => 'one_off_product_xyz_123',
+                    // optional product overrides would go here, i.e. price, quantity
+                ],
             ],
             'redirectUrlSuccess' => 'https://www.sandorian.com/success',
             'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
@@ -38,7 +44,14 @@ class CheckoutEndpointTest extends BaseEndpointTest
             [],
             '{
                         "profileId":"profile_123",
-                        "products":[],
+                        "products": [
+                            {
+                                "id": "one_off_product_abc_987"
+                            },
+                            {
+                                "id": "one_off_product_xyz_123"
+                            }
+                        ],
                         "redirectUrlSuccess":"https://www.sandorian.com/success",
                         "redirectUrlCanceled":"https://www.sandorian.com/canceled"
                     }'
