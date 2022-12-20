@@ -6,6 +6,7 @@ namespace Vatly\API\Resources;
 
 use Vatly\API\VatlyApiClient;
 
+#[\AllowDynamicProperties]
 abstract class BaseResource
 {
     /**
