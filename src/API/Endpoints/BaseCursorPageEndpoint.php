@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Vatly\API\Endpoints;
 
 use Vatly\API\Resources\BaseResourcePage;
+use Vatly\API\Resources\Links\LinksResourceFactory;
+use Vatly\API\Resources\Links\PaginationLinks;
 use Vatly\API\Resources\ResourceFactory;
 
 abstract class BaseCursorPageEndpoint extends BaseEndpoint
@@ -13,11 +15,11 @@ abstract class BaseCursorPageEndpoint extends BaseEndpoint
      * Get the page object that is used by this API endpoint. Every API endpoint uses one type of page object.
      *
      * @param int $count
-     * @param \stdClass $_links
+     * @param PaginationLinks $_links
      *
      * @return BaseResourcePage
      */
-    abstract protected function getResourcePageObject(int $count, \stdClass $_links): BaseResourcePage;
+    abstract protected function getResourcePageObject(int $count, PaginationLinks $_links): BaseResourcePage;
 
     /**
      * Get a page of objects from the REST API.
@@ -43,7 +45,10 @@ abstract class BaseCursorPageEndpoint extends BaseEndpoint
 
         $result = $this->client->performHttpCall(self::REST_LIST, $apiPath);
 
-        $collection = $this->getResourcePageObject($result->count, $result->_links);
+        /** @var PaginationLinks $links */
+        $links = LinksResourceFactory::createResourceFromApiResult($result->_links, new PaginationLinks());
+
+        $collection = $this->getResourcePageObject($result->count, $links);
 
         foreach ($result->_embedded->{$collection->getCollectionResourceName()} as $dataResult) {
             $collection[] = ResourceFactory::createResourceFromApiResult(

@@ -1,0 +1,182 @@
+<?php
+
+namespace Vatly\Tests\Endpoints;
+
+use Vatly\API\Exceptions\ApiException;
+use Vatly\API\Resources\Order;
+use Vatly\API\Resources\OrderCollection;
+
+class OrderEndpointTest extends BaseEndpointTest
+{
+    /** @test
+     * @throws ApiException
+     */
+    public function can_get_order(): void
+    {
+        $orderId = 'order_dummy_id';
+        $responseBodyArray = [
+            'id' => $orderId,
+            'resource' => 'order',
+            'merchantId' => 'merchant_123',
+            'profileId' => 'profile_123',
+            'customerId' => 'customer_123',
+            'testmode' => false,
+            'metadata' => [
+                'order_id' => '123456',
+            ],
+            'paymentMethod' => 'ideal',
+            'orderedAt' => '2020-01-01',
+            'paid' => true,
+            'cancelled' => false,
+            'invoiceNumber' => 'INV 123456',
+            'total' => 100_00,
+            'subtotal' => 80_00,
+            'vat' => "20.00",
+            'tax' => 20_00,
+            'currency' => 'EUR',
+            'sellerDetails' => [
+                'companyName' => 'Sandorian Consultancy B.V.',
+                'streetAndNumber' => 'Korte Leidsedwarsstraat 12',
+                'streetAdditional' => '2nd floor',
+                'postalCode' => '1017 PN',
+                'region' => 'Amsterdam',
+                'fullName' => '',
+                'city' => 'Amsterdam',
+                'country' => 'NL',
+                'vatNumber' => 'NL855555555B01',
+                'email' => 'office@vatly.com',
+            ],
+            'customerDetails' => [
+                'companyName' => 'JOHN DOE INC.',
+                'streetAndNumber' => '112 Main Street',
+                'streetAdditional' => '3nd floor',
+                'postalCode' => '2424 AB',
+                'region' => 'New York',
+                'fullName' => 'John Doe',
+                'city' => 'New York',
+                'country' => 'US',
+                'vatNumber' => 'US123456789',
+                'email' => 'johndoe@example.com',
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/order/'.$orderId,
+                    'type' => 'application/hal+json',
+                ],
+                'customer' => [
+                    'href' => self::API_ENDPOINT_URL.'/customer/customer_123',
+                    'type' => 'application/hal+json',
+                ],
+                'invoice' => [
+                    'href' => self::API_ENDPOINT_URL.'/invoice/invoice_dummy_id',
+                    'type' => 'application/pdf',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObject($responseBodyArray);
+
+        $order = $this->client->orders->get($orderId, []);
+
+
+        $this->assertEquals($orderId, $order->id);
+        $this->assertEquals('order', $order->resource);
+        $this->assertEquals('merchant_123', $order->merchantId);
+        $this->assertEquals('profile_123', $order->profileId);
+        $this->assertEquals('customer_123', $order->customerId);
+        $this->assertFalse($order->testmode);
+        $this->assertEquals('ideal', $order->paymentMethod);
+        $this->assertTrue($order->paid);
+        $this->assertFalse($order->cancelled);
+        $this->assertEquals(100_00, $order->total);
+        $this->assertEquals(80_00, $order->subtotal);
+        $this->assertEquals('20.00', $order->vat);
+        $this->assertEquals(20_00, $order->tax);
+        $this->assertEquals('EUR', $order->currency);
+        $this->assertEquals('INV 123456', $order->invoiceNumber);
+        $this->assertEquals('2020-01-01', $order->orderedAt);
+
+        $this->assertEquals('https://api.vatly.com/v1/order/order_dummy_id', $order->_links->self->href);
+        $this->assertEquals('application/hal+json', $order->_links->self->type);
+        $this->assertEquals('https://api.vatly.com/v1/customer/customer_123', $order->_links->customer->href);
+        $this->assertEquals('application/hal+json', $order->_links->customer->type);
+        $this->assertEquals('https://api.vatly.com/v1/invoice/invoice_dummy_id', $order->_links->invoice->href);
+        $this->assertEquals('application/pdf', $order->_links->invoice->type);
+
+
+        $this->assertEquals('Sandorian Consultancy B.V.', $order->sellerDetails->companyName);
+        $this->assertEquals('Korte Leidsedwarsstraat 12', $order->sellerDetails->streetAndNumber);
+        $this->assertEquals('2nd floor', $order->sellerDetails->streetAdditional);
+        $this->assertEquals('1017 PN', $order->sellerDetails->postalCode);
+        $this->assertEquals('Amsterdam', $order->sellerDetails->region);
+        $this->assertEquals('', $order->sellerDetails->fullName);
+        $this->assertEquals('Amsterdam', $order->sellerDetails->city);
+        $this->assertEquals('NL', $order->sellerDetails->country);
+        $this->assertEquals('NL855555555B01', $order->sellerDetails->vatNumber);
+        $this->assertEquals('office@vatly.com', $order->sellerDetails->email);
+
+        $this->assertEquals('JOHN DOE INC.', $order->customerDetails->companyName);
+        $this->assertEquals('112 Main Street', $order->customerDetails->streetAndNumber);
+        $this->assertEquals('3nd floor', $order->customerDetails->streetAdditional);
+        $this->assertEquals('2424 AB', $order->customerDetails->postalCode);
+        $this->assertEquals('New York', $order->customerDetails->region);
+        $this->assertEquals('John Doe', $order->customerDetails->fullName);
+        $this->assertEquals('New York', $order->customerDetails->city);
+        $this->assertEquals('US', $order->customerDetails->country);
+        $this->assertEquals('US123456789', $order->customerDetails->vatNumber);
+        $this->assertEquals('johndoe@example.com', $order->customerDetails->email);
+    }
+
+    /** @test */
+    public function get_orders_list(): void
+    {
+        $responseBodyArray = [
+            'count' => 2,
+            '_embedded' => [
+                'orders' => [
+                    [
+                        'id' => 'order_123',
+                        'resource' => 'order',
+                    ],
+                    [
+                        'id' => 'order_456',
+                        'resource' => 'order',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => null,
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObject($responseBodyArray);
+
+        $orderCollection = $this->client->orders->page();
+
+        ray($orderCollection);
+
+        $this->assertEquals(2, $orderCollection->count);
+        $this->assertCount(2, $orderCollection);
+        $this->assertInstanceOf(OrderCollection::class, $orderCollection);
+        $this->assertInstanceOf(Order::class, $orderCollection[0]);
+        $this->assertInstanceOf(Order::class, $orderCollection[1]);
+        $this->assertEquals('order', $orderCollection[0]->resource);
+        $this->assertEquals('order', $orderCollection[1]->resource);
+        $this->assertEquals('order_123', $orderCollection[0]->id);
+        $this->assertEquals('order_456', $orderCollection[1]->id);
+
+        $this->assertEquals('https://api.vatly.com/v1/orders', $orderCollection->_links->self->href);
+        $this->assertEquals('application/hal+json', $orderCollection->_links->self->type);
+        $this->assertEquals('https://api.vatly.com/v1/orders?from=order_next_dummy_id', $orderCollection->_links->next->href);
+        $this->assertEquals('application/hal+json', $orderCollection->_links->next->type);
+        $this->assertNull($orderCollection->_links->previous);
+    }
+}

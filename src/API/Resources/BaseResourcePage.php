@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Vatly\API\Resources;
 
 use ArrayObject;
+use Vatly\API\Resources\Links\BaseLinksResource;
+use Vatly\API\Resources\Links\PaginationLinks;
 
 abstract class BaseResourcePage extends ArrayObject
 {
@@ -16,13 +18,15 @@ abstract class BaseResourcePage extends ArrayObject
     public int $count;
 
     /**
-     * @var \stdClass|null
+     * @var \stdClass|BaseLinksResource|null
      */
-    public ?\stdClass $_links;
+    public $_links;
+
+    public array $_embedded;
 
     /**
      * @param int $count
-     * @param \stdClass|null $_links
+     * @param \stdClass|BaseLinksResource|PaginationLinks|null $_links
      */
     public function __construct($count, $_links)
     {

@@ -126,7 +126,7 @@ abstract class BaseEndpoint
         $id = urlencode($id);
         $result = $this->client->performHttpCall(
             self::REST_READ,
-            "{$this->getResourcePath()}/{$id}" . $this->buildQueryString($filters)
+            "{$this->getResourcePath()}/{$id}" . $this->buildQueryString($filters),
         );
 
         return ResourceFactory::createResourceFromApiResult($result, $this->getResourceObject());

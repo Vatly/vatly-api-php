@@ -37,12 +37,12 @@ class CurlHttpClient implements HttpClientInterface
      * @param string $httpMethod
      * @param string $url
      * @param array $headers
-     * @param string $httpBody
+     * @param ?string $httpBody
      * @return object|null
      * @throws \Vatly\API\Exceptions\ApiException
      * @throws \Vatly\API\Exceptions\CurlConnectTimeoutException
      */
-    public function send(string $httpMethod, string $url, array $headers, string $httpBody): ?object
+    public function send(string $httpMethod, string $url, array $headers, ?string $httpBody): ?object
     {
         for ($i = 0; $i <= self::MAX_RETRIES; $i++) {
             usleep($i * self::DELAY_INCREASE_MS);

@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Vatly\API\Endpoints;
 
+use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\BaseResource;
+use Vatly\API\Resources\BaseResourcePage;
 use Vatly\API\Resources\Checkout;
+use Vatly\API\Resources\CheckoutCollection;
+use Vatly\API\Resources\Links\PaginationLinks;
 
-class CheckoutEndpoint extends BaseEndpoint
+class CheckoutEndpoint extends BaseCursorPageEndpoint
 {
     protected string $resourcePath = "checkouts";
+
+    const RESOURCE_ID_PREFIX = 'checkout_';
 
     /**
      * @inheritDoc
@@ -35,5 +41,22 @@ class CheckoutEndpoint extends BaseEndpoint
     public function get(string $id, array $parameters = []): BaseResource
     {
         return $this->rest_read($id, $parameters);
+    }
+
+    /**
+     * @param $from
+     * @param $limit
+     * @param array $parameters
+     * @return BaseResourcePage
+     * @throws ApiException
+     */
+    public function page($from = null, $limit = null, array $parameters = [])
+    {
+        return $this->rest_list($from, $limit, $parameters);
+    }
+
+    protected function getResourcePageObject(int $count, PaginationLinks $_links): BaseResourcePage
+    {
+        return new CheckoutCollection($this->client, $count, $_links);
     }
 }

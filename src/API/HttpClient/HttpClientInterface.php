@@ -10,7 +10,7 @@ interface HttpClientInterface
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): ?object;
 
     /**

@@ -16,7 +16,7 @@ class SpyHttpClient implements HttpClientInterface
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): ?object {
         $this->recordSend($httpMethod, $url, $headers, $httpBody);
 
@@ -28,8 +28,20 @@ class SpyHttpClient implements HttpClientInterface
         return 'SpyHttpClient/007';
     }
 
-    public function setSendReturnObject(object $value): self
+    /**
+     * @param object|array|string $value
+     * @return $this
+     */
+    public function setSendReturnObject($value): self
     {
+        if (is_string($value)) {
+            $value = json_decode($value);
+        } elseif (is_array($value)) {
+            $value = json_decode(json_encode($value));
+        }
+        if (! is_object($value)) {
+            throw new \InvalidArgumentException('Value must be an object or array.');
+        }
         $this->sendReturn = $value;
 
         return $this;
