@@ -2,7 +2,7 @@
 
 namespace Vatly\API\Resources;
 
-class OneOffProductCollection extends CursorResourcePage
+class OneOffProductCollection extends BaseResourcePage
 {
     public function getCollectionResourceName(): ?string
     {

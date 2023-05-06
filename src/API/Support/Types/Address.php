@@ -1,6 +1,6 @@
 <?php
 
-namespace Vatly\API\Resources;
+namespace Vatly\API\Support\Types;
 
 class Address
 {

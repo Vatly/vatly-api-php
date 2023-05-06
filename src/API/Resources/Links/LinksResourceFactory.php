@@ -2,6 +2,8 @@
 
 namespace Vatly\API\Resources\Links;
 
+use Vatly\API\Support\Types\Link;
+
 class LinksResourceFactory
 {
     public static function createResourceFromApiResult($apiResult, BaseLinksResource $resource): BaseLinksResource

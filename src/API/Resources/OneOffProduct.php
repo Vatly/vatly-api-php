@@ -3,6 +3,7 @@
 namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\OneOffProductLinks;
+use Vatly\API\Support\Types\CurrencyAmount;
 
 class OneOffProduct extends BaseResource
 {
@@ -20,9 +21,7 @@ class OneOffProduct extends BaseResource
 
     public string $description;
 
-    public int $price;
-
-    public string $currency;
+    public CurrencyAmount $price;
 
     public OneOffProductLinks $_links;
 }

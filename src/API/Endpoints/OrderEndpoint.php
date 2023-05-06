@@ -8,7 +8,7 @@ use Vatly\API\Resources\Links\PaginationLinks;
 use Vatly\API\Resources\Order;
 use Vatly\API\Resources\OrderCollection;
 
-class OrderEndpoint extends BaseCursorPageEndpoint
+class OrderEndpoint extends BaseEndpoint
 {
     protected string $resourcePath = "orders";
 

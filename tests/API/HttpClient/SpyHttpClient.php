@@ -34,17 +34,22 @@ class SpyHttpClient implements HttpClientInterface
      */
     public function setSendReturnObject($value): self
     {
-        if (is_string($value)) {
-            $value = json_decode($value);
-        } elseif (is_array($value)) {
-            $value = json_decode(json_encode($value));
-        }
         if (! is_object($value)) {
             throw new \InvalidArgumentException('Value must be an object or array.');
         }
         $this->sendReturn = $value;
 
         return $this;
+    }
+
+    public function setSendReturnObjectFromArray(array $value): self
+    {
+        return $this->setSendReturnObject(json_decode(json_encode($value)));
+    }
+
+    public function setSendReturnObjectFromString(string $value): self
+    {
+        return $this->setSendReturnObject(json_decode($value));
     }
 
     public function wasSent(

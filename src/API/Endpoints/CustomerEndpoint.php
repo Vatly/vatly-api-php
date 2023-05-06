@@ -7,27 +7,27 @@ namespace Vatly\API\Endpoints;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\BaseResource;
 use Vatly\API\Resources\BaseResourcePage;
-use Vatly\API\Resources\Checkout;
-use Vatly\API\Resources\CheckoutCollection;
+use Vatly\API\Resources\Customer;
+use Vatly\API\Resources\CustomerCollection;
 use Vatly\API\Resources\Links\PaginationLinks;
 
-class CheckoutEndpoint extends BaseEndpoint
+class CustomerEndpoint extends BaseEndpoint
 {
-    protected string $resourcePath = "checkouts";
+    protected string $resourcePath = "customers";
 
-    const RESOURCE_ID_PREFIX = 'checkout_';
+    const RESOURCE_ID_PREFIX = 'customer_';
 
     /**
      * @inheritDoc
      */
-    protected function getResourceObject(): Checkout
+    protected function getResourceObject(): Customer
     {
-        return new Checkout($this->client);
+        return new Customer($this->client);
     }
 
     /**
-     * @throws \Vatly\API\Exceptions\ApiException
-     * @return Checkout|BaseResource
+     * @return Customer|BaseResource
+     *@throws ApiException
      */
     public function create(array $payload, array $filters = []): BaseResource
     {
@@ -35,8 +35,8 @@ class CheckoutEndpoint extends BaseEndpoint
     }
 
     /**
-     * @throws \Vatly\API\Exceptions\ApiException
-     * @return Checkout|BaseResource
+     * @return Customer|BaseResource
+     *@throws ApiException
      */
     public function get(string $id, array $parameters = []): BaseResource
     {
@@ -47,7 +47,7 @@ class CheckoutEndpoint extends BaseEndpoint
      * @param $from
      * @param $limit
      * @param array $parameters
-     * @return BaseResourcePage
+     * @return CustomerCollection|BaseResourcePage
      * @throws ApiException
      */
     public function page($from = null, $limit = null, array $parameters = [])
@@ -57,6 +57,6 @@ class CheckoutEndpoint extends BaseEndpoint
 
     protected function getResourcePageObject(int $count, PaginationLinks $_links): BaseResourcePage
     {
-        return new CheckoutCollection($this->client, $count, $_links);
+        return new CustomerCollection($this->client, $count, $_links);
     }
 }

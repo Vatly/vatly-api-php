@@ -9,7 +9,7 @@ use Vatly\API\Resources\Links\PaginationLinks;
 use Vatly\API\Resources\OneOffProduct;
 use Vatly\API\Resources\OneOffProductCollection;
 
-class OneOffProductEndpoint extends BaseCursorPageEndpoint
+class OneOffProductEndpoint extends BaseEndpoint
 {
     protected string $resourcePath = "one-off-products";
 

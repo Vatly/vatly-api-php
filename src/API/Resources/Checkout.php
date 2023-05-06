@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\CheckoutLinks;
+use Vatly\API\Support\Types\CheckoutStatus;
+use Vatly\API\Support\Types\WebhookUrls;
 
 class Checkout extends BaseResource
 {
@@ -19,15 +21,13 @@ class Checkout extends BaseResource
     public string $resource;
 
     /**
-     * @example profile_bb0297e0309a4908a2eff8ee4d62a23f
-     */
-    public string $profileId;
-
-    /**
      * @example merchant_f7f3cbf96f6c444abd76aafaf99ecde9
      */
     public string $merchantId;
-    public string $orderId;
+    /**
+     * @example_66fc8a40718b46bea50f1a25f456d243
+     */
+    public ?string $orderId = null;
 
     public bool $testmode;
 
@@ -49,16 +49,68 @@ class Checkout extends BaseResource
 
     public CheckoutLinks $_links;
 
-    public ?int $total = null;
+    /* @see CheckoutStatus */
+    public string $status;
 
-    public ?int $tax = null;
+    public ?WebhookUrls $webhookUrls = null;
+    
+    public ?string $createdAt = null;
 
-    public ?int $subtotal = null;
+    /**
+     * Is this created?
+     */
+    public function isCreated(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_CREATED;
+    }
 
-    public ?string $currency = null;
+    /**
+     * Is this paid for?
+     */
+    public function isPaid(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_PAID;
+    }
 
-    public ?string $vat = null;
-    public ?string $paymentMethod = null;
+    /**
+     * Is this authorized?
+     */
+    public function isAuthorized(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_AUTHORIZED;
+    }
 
-    public bool $paid = false;
+    /**
+     * Is this canceled?
+     */
+    public function isCanceled(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_CANCELED;
+    }
+
+    /**
+     * Is this completed?
+     */
+    public function isCompleted(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_COMPLETED;
+    }
+
+    /**
+     * Is this expired?
+     */
+    public function isExpired(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_EXPIRED;
+    }
+
+    /**
+     * Is this completed?
+     */
+    public function isPending(): bool
+    {
+        return $this->status === CheckoutStatus::STATUS_PENDING;
+    }
+
+
 }

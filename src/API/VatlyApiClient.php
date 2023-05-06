@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Vatly\API;
 
 use Vatly\API\Endpoints\CheckoutEndpoint;
+use Vatly\API\Endpoints\CustomerEndpoint;
 use Vatly\API\Endpoints\OneOffProductEndpoint;
 use Vatly\API\Endpoints\OrderEndpoint;
 use Vatly\API\Exceptions\ApiException;
@@ -65,6 +66,8 @@ class VatlyApiClient
 
     public OneOffProductEndpoint $oneOffProducts;
 
+    public CustomerEndpoint $customers;
+
     /**
      * @throws \Vatly\API\Exceptions\IncompatiblePlatformException
      */
@@ -93,6 +96,8 @@ class VatlyApiClient
         $this->checkouts = new CheckoutEndpoint($this);
         $this->orders = new OrderEndpoint($this);
         $this->oneOffProducts = new OneOffProductEndpoint($this);
+        $this->customers = new CustomerEndpoint($this);
+
     }
 
     protected function initializeVersionString(): void

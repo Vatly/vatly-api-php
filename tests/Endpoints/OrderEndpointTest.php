@@ -5,6 +5,7 @@ namespace Vatly\Tests\Endpoints;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Order;
 use Vatly\API\Resources\OrderCollection;
+use Vatly\API\Support\Types\OrderStatus;
 
 class OrderEndpointTest extends BaseEndpointTest
 {
@@ -18,7 +19,6 @@ class OrderEndpointTest extends BaseEndpointTest
             'id' => $orderId,
             'resource' => 'order',
             'merchantId' => 'merchant_123',
-            'profileId' => 'profile_123',
             'customerId' => 'customer_123',
             'testmode' => false,
             'metadata' => [
@@ -26,15 +26,23 @@ class OrderEndpointTest extends BaseEndpointTest
             ],
             'paymentMethod' => 'ideal',
             'orderedAt' => '2020-01-01',
-            'paid' => true,
-            'cancelled' => false,
+            'status' => OrderStatus::STATUS_PAID,
             'invoiceNumber' => 'INV 123456',
-            'total' => 100_00,
-            'subtotal' => 80_00,
-            'vat' => "20.00",
-            'tax' => 20_00,
-            'currency' => 'EUR',
-            'sellerDetails' => [
+            'total' => [
+                "value" => "100.00",
+                "currency" => "EUR",
+            ],
+            'subtotal' => [
+                "value" => "80.00",
+                "currency" => "EUR",
+            ],
+            'taxName' => "VAT",
+            'taxPercentage' => '20.00',
+            'taxAmount' => [
+                "value" => "20.00",
+                "currency" => "EUR",
+            ],
+            'merchantDetails' => [
                 'companyName' => 'Sandorian Consultancy B.V.',
                 'streetAndNumber' => 'Korte Leidsedwarsstraat 12',
                 'streetAdditional' => '2nd floor',
@@ -74,7 +82,7 @@ class OrderEndpointTest extends BaseEndpointTest
             ],
         ];
 
-        $this->httpClient->setSendReturnObject($responseBodyArray);
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         $order = $this->client->orders->get($orderId, []);
 
@@ -82,17 +90,17 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals($orderId, $order->id);
         $this->assertEquals('order', $order->resource);
         $this->assertEquals('merchant_123', $order->merchantId);
-        $this->assertEquals('profile_123', $order->profileId);
         $this->assertEquals('customer_123', $order->customerId);
         $this->assertFalse($order->testmode);
         $this->assertEquals('ideal', $order->paymentMethod);
-        $this->assertTrue($order->paid);
+        $this->assertEquals(OrderStatus::STATUS_PAID, $order->status);
         $this->assertFalse($order->cancelled);
-        $this->assertEquals(100_00, $order->total);
-        $this->assertEquals(80_00, $order->subtotal);
-        $this->assertEquals('20.00', $order->vat);
-        $this->assertEquals(20_00, $order->tax);
-        $this->assertEquals('EUR', $order->currency);
+        $this->assertEquals('100.00', $order->total->value);
+        $this->assertEquals('80.00', $order->subtotal->value);
+        $this->assertEquals('VAT', $order->taxName);
+        $this->assertEquals('20.00', $order->taxPercentage);
+        $this->assertEquals('20.00', $order->taxAmount->value);
+        $this->assertEquals('EUR', $order->taxAmount->currency);
         $this->assertEquals('INV 123456', $order->invoiceNumber);
         $this->assertEquals('2020-01-01', $order->orderedAt);
 
@@ -104,16 +112,16 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('application/pdf', $order->_links->invoice->type);
 
 
-        $this->assertEquals('Sandorian Consultancy B.V.', $order->sellerDetails->companyName);
-        $this->assertEquals('Korte Leidsedwarsstraat 12', $order->sellerDetails->streetAndNumber);
-        $this->assertEquals('2nd floor', $order->sellerDetails->streetAdditional);
-        $this->assertEquals('1017 PN', $order->sellerDetails->postalCode);
-        $this->assertEquals('Amsterdam', $order->sellerDetails->region);
-        $this->assertEquals('', $order->sellerDetails->fullName);
-        $this->assertEquals('Amsterdam', $order->sellerDetails->city);
-        $this->assertEquals('NL', $order->sellerDetails->country);
-        $this->assertEquals('NL855555555B01', $order->sellerDetails->vatNumber);
-        $this->assertEquals('office@vatly.com', $order->sellerDetails->email);
+        $this->assertEquals('Sandorian Consultancy B.V.', $order->merchantDetails->companyName);
+        $this->assertEquals('Korte Leidsedwarsstraat 12', $order->merchantDetails->streetAndNumber);
+        $this->assertEquals('2nd floor', $order->merchantDetails->streetAdditional);
+        $this->assertEquals('1017 PN', $order->merchantDetails->postalCode);
+        $this->assertEquals('Amsterdam', $order->merchantDetails->region);
+        $this->assertEquals('', $order->merchantDetails->fullName);
+        $this->assertEquals('Amsterdam', $order->merchantDetails->city);
+        $this->assertEquals('NL', $order->merchantDetails->country);
+        $this->assertEquals('NL855555555B01', $order->merchantDetails->vatNumber);
+        $this->assertEquals('office@vatly.com', $order->merchantDetails->email);
 
         $this->assertEquals('JOHN DOE INC.', $order->customerDetails->companyName);
         $this->assertEquals('112 Main Street', $order->customerDetails->streetAndNumber);
@@ -154,14 +162,16 @@ class OrderEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
+                'first' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders',
+                    'type' => 'application/hal+json',
+                ],
             ],
         ];
 
-        $this->httpClient->setSendReturnObject($responseBodyArray);
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         $orderCollection = $this->client->orders->page();
-
-        ray($orderCollection);
 
         $this->assertEquals(2, $orderCollection->count);
         $this->assertCount(2, $orderCollection);

@@ -3,6 +3,9 @@
 namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\OrderLinks;
+use Vatly\API\Support\Types\Address;
+use Vatly\API\Support\Types\CurrencyAmount;
+use Vatly\API\Support\Types\OrderStatus;
 
 class Order extends BaseResource
 {
@@ -15,11 +18,6 @@ class Order extends BaseResource
      * @example order
      */
     public string $resource;
-
-    /**
-     * @example profile_bb0297e0309a4908a2eff8ee4d62a23f
-     */
-    public string $profileId;
 
     /**
      * @example merchant_f7f3cbf96f6c444abd76aafaf99ecde9
@@ -35,20 +33,21 @@ class Order extends BaseResource
 
     public bool $testmode;
 
-    public int $total;
+    public CurrencyAmount $total;
 
-    public int $tax;
+    public CurrencyAmount $taxAmount;
 
-    public int $subtotal;
+    public CurrencyAmount $subtotal;
 
-    public string $currency;
+    public string $taxName;
+    public string $taxPercentage;
 
-    public string $vat;
     public string $paymentMethod;
 
     public ?string $invoiceNumber = null;
 
-    public bool $paid = false;
+    /** @see OrderStatus */
+    public string $status;
 
     public bool $cancelled = false;
 
@@ -56,5 +55,62 @@ class Order extends BaseResource
 
     public Address $customerDetails;
 
-    public Address $sellerDetails;
+    public Address $merchantDetails;
+
+    /**
+     * Is this order created?
+     */
+    public function isCreated(): bool
+    {
+        return $this->status === OrderStatus::STATUS_CREATED;
+    }
+
+    /**
+     * Is this order paid for?
+     */
+    public function isPaid(): bool
+    {
+        return $this->status === OrderStatus::STATUS_PAID;
+    }
+
+    /**
+     * Is this order authorized?
+     */
+    public function isAuthorized(): bool
+    {
+        return $this->status === OrderStatus::STATUS_AUTHORIZED;
+    }
+
+    /**
+     * Is this order canceled?
+     */
+    public function isCanceled(): bool
+    {
+        return $this->status === OrderStatus::STATUS_CANCELED;
+    }
+
+    /**
+     * Is this order completed?
+     */
+    public function isCompleted(): bool
+    {
+        return $this->status === OrderStatus::STATUS_COMPLETED;
+    }
+
+    /**
+     * Is this order expired?
+     */
+    public function isExpired(): bool
+    {
+        return $this->status === OrderStatus::STATUS_EXPIRED;
+    }
+
+    /**
+     * Is this order completed?
+     */
+    public function isPending(): bool
+    {
+        return $this->status === OrderStatus::STATUS_PENDING;
+    }
+
 }

@@ -16,8 +16,10 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             'resource' => 'one_off_product',
             'name' => 'Test product',
             'description' => 'Test product description',
-            'price' => 1000,
-            'currency' => 'EUR',
+            'price' => [
+                'value' => "10.00",
+                'currency' => 'EUR',
+            ],
             '_links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL. '/one-off-products/one_off_product_78b146a7de7d417e9d68d7e6ef193d18',
@@ -26,29 +28,31 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             ],
         ];
 
-        $this->httpClient->setSendReturnObject($responseBodyArray);
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         /** @var OneOffProduct $product */
         $product = $this->client->oneOffProducts->create([
             'name' => 'Test product',
             'description' => 'Test product description',
-            'price' => 1000,
-            'currency' => 'EUR',
+            'price' => [
+                'value' => '10.00',
+                'currency' => 'EUR',
+            ],
         ]);
 
         $this->assertWasSentOnly(
             VatlyApiClient::HTTP_POST,
             self::API_ENDPOINT_URL."/one-off-products",
             [],
-            '{"name":"Test product","description":"Test product description","price":1000,"currency":"EUR"}'
+            '{"name":"Test product","description":"Test product description","price":{"value":"10.00","currency":"EUR"}}'
         );
 
         $this->assertEquals('one_off_product_78b146a7de7d417e9d68d7e6ef193d18', $product->id);
         $this->assertEquals('one_off_product', $product->resource);
         $this->assertEquals('Test product', $product->name);
         $this->assertEquals('Test product description', $product->description);
-        $this->assertEquals(1000, $product->price);
-        $this->assertEquals('EUR', $product->currency);
+        $this->assertEquals('10.00', $product->price->value);
+        $this->assertEquals('EUR', $product->price->currency);
     }
 
     /** @test */
@@ -61,8 +65,10 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             'resource' => 'one_off_product',
             'name' => 'Test product',
             'description' => 'Test product description',
-            'price' => 1000,
-            'currency' => 'EUR',
+            'price' => [
+                'value' => '10.00',
+                'currency' => 'EUR',
+            ],
             '_links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL. '/one-off-products/' . $productId,
@@ -71,7 +77,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             ],
         ];
 
-        $this->httpClient->setSendReturnObject($responseBodyArray);
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         $product = $this->client->oneOffProducts->get($productId);
 
@@ -79,8 +85,8 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $this->assertEquals('one_off_product', $product->resource);
         $this->assertEquals('Test product', $product->name);
         $this->assertEquals('Test product description', $product->description);
-        $this->assertEquals(1000, $product->price);
-        $this->assertEquals('EUR', $product->currency);
+        $this->assertEquals('10.00', $product->price->value);
+        $this->assertEquals('EUR', $product->price->currency);
 
         $this->assertEquals(self::API_ENDPOINT_URL. '/one-off-products/' . $productId, $product->_links->self->href);
         $this->assertEquals('application/hal+json', $product->_links->self->type);
@@ -120,7 +126,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         ];
 
 
-        $this->httpClient->setSendReturnObject($responseBodyArray);
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         $productCollection = $this->client->oneOffProducts->page();
 
