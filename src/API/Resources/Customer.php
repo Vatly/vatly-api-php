@@ -18,7 +18,6 @@ class Customer extends BaseResource
 
     public ?string $name = null;
 
-    /* @var string|null */
     public ?string $streetAndNumber = null;
 
     public ?string $streetAdditional = null;

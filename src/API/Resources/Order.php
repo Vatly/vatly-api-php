@@ -24,6 +24,9 @@ class Order extends BaseResource
      */
     public string $merchantId;
 
+    /**
+     * @example customer_78b146a7de7d417e9d68d7e6ef193d18
+     */
     public string $customerId;
 
     /**
@@ -39,9 +42,19 @@ class Order extends BaseResource
 
     public CurrencyAmount $subtotal;
 
+    /**
+     * @example VAT
+     */
     public string $taxName;
+
+    /**
+     * @example 21.00
+     */
     public string $taxPercentage;
 
+    /**
+     * @example creditcard
+     */
     public string $paymentMethod;
 
     public ?string $invoiceNumber = null;

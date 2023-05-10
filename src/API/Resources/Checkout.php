@@ -24,8 +24,9 @@ class Checkout extends BaseResource
      * @example merchant_f7f3cbf96f6c444abd76aafaf99ecde9
      */
     public string $merchantId;
+
     /**
-     * @example_66fc8a40718b46bea50f1a25f456d243
+     * @example order_66fc8a40718b46bea50f1a25f456d243
      */
     public ?string $orderId = null;
 
