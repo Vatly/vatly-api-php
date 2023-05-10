@@ -44,13 +44,10 @@ class CustomerEndpoint extends BaseEndpoint
     }
 
     /**
-     * @param $from
-     * @param $limit
-     * @param array $parameters
      * @return CustomerCollection|BaseResourcePage
      * @throws ApiException
      */
-    public function page($from = null, $limit = null, array $parameters = [])
+    public function page(?string $from = null, ?int $limit = null, array $parameters = [])
     {
         return $this->rest_list($from, $limit, $parameters);
     }

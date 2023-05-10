@@ -36,13 +36,10 @@ class OneOffProductEndpoint extends BaseEndpoint
     }
 
     /**
-     * @param $from
-     * @param $limit
-     * @param array $parameters
-     * @return BaseResourcePage
+     * @return OneOffProductCollection|BaseResourcePage
      * @throws ApiException
      */
-    public function page($from = null, $limit = null, array $parameters = []): BaseResourcePage
+    public function page(?string $from = null, ?int $limit = null, array $parameters = []): BaseResourcePage
     {
         return $this->rest_list($from, $limit, $parameters);
     }

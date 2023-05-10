@@ -3,6 +3,7 @@
 namespace Vatly\API\Endpoints;
 
 use Vatly\API\Exceptions\ApiException;
+use Vatly\API\Resources\BaseResource;
 use Vatly\API\Resources\BaseResourcePage;
 use Vatly\API\Resources\Links\PaginationLinks;
 use Vatly\API\Resources\Order;
@@ -22,7 +23,7 @@ class OrderEndpoint extends BaseEndpoint
 
     /**
      * @throws ApiException
-     * @return Order
+     * @return Order|BaseResource
      */
     public function get(string $id, array $parameters = [])
     {
@@ -30,13 +31,10 @@ class OrderEndpoint extends BaseEndpoint
     }
 
     /**
-     * @param $from
-     * @param $limit
-     * @param array $parameters
-     * @return BaseResourcePage
+     * @return OrderCollection|BaseResourcePage
      * @throws ApiException
      */
-    public function page($from = null, $limit = null, array $parameters = []): BaseResourcePage
+    public function page(?string $from = null, ?int $limit = null, array $parameters = []): BaseResourcePage
     {
         return $this->rest_list($from, $limit, $parameters);
     }

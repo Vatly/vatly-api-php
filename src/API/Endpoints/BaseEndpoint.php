@@ -233,7 +233,7 @@ abstract class BaseEndpoint
      * @return BaseResourcePage
      * @throws \Vatly\API\Exceptions\ApiException
      */
-    protected function rest_list(string $from = null, int $limit = null, array $filters = []): BaseResourcePage
+    protected function rest_list(?string $from = null, ?int $limit = null, array $filters = []): BaseResourcePage
     {
         $apiPath = $this->getResourcePath() . $this->buildQueryString(
             array_merge(
