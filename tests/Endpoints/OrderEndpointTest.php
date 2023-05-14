@@ -5,6 +5,7 @@ namespace Vatly\Tests\Endpoints;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Order;
 use Vatly\API\Resources\OrderCollection;
+use Vatly\API\Resources\OrderLine;
 use Vatly\API\Types\OrderStatus;
 
 class OrderEndpointTest extends BaseEndpointTest
@@ -41,6 +42,44 @@ class OrderEndpointTest extends BaseEndpointTest
             'taxAmount' => [
                 "value" => "20.00",
                 "currency" => "EUR",
+            ],
+            'lines' => [
+                [
+                    "id" => "order_item_2a46f4c01d3b47979f4d7b3f58c98be7",
+                    "resource" => "orderline",
+                    "orderId" => $orderId,
+                    "description" => "PDF Book",
+                    "quantity" => 1,
+                    "basePrice" => [
+                        "value" => "80.00",
+                        "currency" => "EUR",
+                    ],
+                    "total" => [
+                        "value" => "100.00",
+                        "currency" => "EUR",
+                    ],
+                    "taxAmount" => [
+                        "value" => "20.00",
+                        "currency" => "EUR",
+                    ],
+                    "subtotal" => [
+                        "value" => "80.00",
+                        "currency" => "EUR",
+                    ],
+                    "taxName" => "VAT",
+                    "taxPercentage" => "20.00",
+                    '_links' => [
+                        'self' => [
+                            'href' => self::API_ENDPOINT_URL.'/order/'.$orderId.'/line/order_item_2a46f4c01d3b47979f4d7b3f58c98be7',
+                            'type' => 'application/hal+json',
+                        ],
+                        'order' => [
+                            'href' => self::API_ENDPOINT_URL.'/order/'.$orderId,
+                            'type' => 'application/hal+json',
+                        ],
+                    ],
+
+                ],
             ],
             'merchantDetails' => [
                 'companyName' => 'Sandorian Consultancy B.V.',
@@ -86,7 +125,6 @@ class OrderEndpointTest extends BaseEndpointTest
 
         /** @var Order $order */
         $order = $this->client->orders->get($orderId, []);
-
 
         $this->assertEquals($orderId, $order->id);
         $this->assertEquals('order', $order->resource);
@@ -134,6 +172,22 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('US', $order->customerDetails->country);
         $this->assertEquals('US123456789', $order->customerDetails->vatNumber);
         $this->assertEquals('johndoe@example.com', $order->customerDetails->email);
+
+        $this->assertEquals(1, $order->lines()->count());
+
+        /** @var OrderLine $orderLine */
+        $orderLine = $order->lines()[0];
+        $this->assertEquals('order_item_2a46f4c01d3b47979f4d7b3f58c98be7', $orderLine->id);
+        $this->assertEquals('orderline', $orderLine->resource);
+        $this->assertEquals('order_dummy_id', $orderLine->orderId);
+        $this->assertEquals('PDF Book', $orderLine->description);
+        $this->assertEquals("100.00", $orderLine->total->value);
+        $this->assertEquals("80.00", $orderLine->subtotal->value);
+        $this->assertEquals("80.00", $orderLine->basePrice->value);
+        $this->assertEquals("VAT", $orderLine->taxName);
+        $this->assertEquals("20.00", $orderLine->taxPercentage);
+        $this->assertEquals("20.00", $orderLine->taxAmount->value);
+        $this->assertEquals("EUR", $orderLine->taxAmount->currency);
     }
 
     /** @test */

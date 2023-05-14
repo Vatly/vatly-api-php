@@ -71,6 +71,28 @@ class Order extends BaseResource
     public Address $merchantDetails;
 
     /**
+     * @var OrderLine[]|array
+     */
+    public array $lines;
+
+
+    /**
+     * Get the line value objects
+     *
+     * @return OrderLineCollection
+     */
+    public function lines(): OrderLineCollection
+    {
+        return ResourceFactory::createCursorResourcePage(
+            $this->apiClient,
+            $this->lines,
+            OrderLine::class,
+            null,
+            OrderLineCollection::class,
+        );
+    }
+
+    /**
      * Is this order created?
      */
     public function isCreated(): bool

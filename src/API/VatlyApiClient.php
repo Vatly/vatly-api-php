@@ -8,6 +8,7 @@ use Vatly\API\Endpoints\CheckoutEndpoint;
 use Vatly\API\Endpoints\CustomerEndpoint;
 use Vatly\API\Endpoints\OneOffProductEndpoint;
 use Vatly\API\Endpoints\OrderEndpoint;
+use Vatly\API\Endpoints\OrderLineEndpoint;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Exceptions\HttpAdapterDoesNotSupportDebuggingException;
 use Vatly\API\HttpClient\DefaultHttpClientFactory;
@@ -64,6 +65,8 @@ class VatlyApiClient
 
     public OrderEndpoint $orders;
 
+    public OrderLineEndpoint $orderLines;
+
     public OneOffProductEndpoint $oneOffProducts;
 
     public CustomerEndpoint $customers;
@@ -95,6 +98,7 @@ class VatlyApiClient
     {
         $this->checkouts = new CheckoutEndpoint($this);
         $this->orders = new OrderEndpoint($this);
+        $this->orderLines = new OrderLineEndpoint($this);
         $this->oneOffProducts = new OneOffProductEndpoint($this);
         $this->customers = new CustomerEndpoint($this);
     }
