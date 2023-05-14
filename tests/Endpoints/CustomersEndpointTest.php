@@ -80,8 +80,6 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals(['customer_id' => '123456'], (array) $customer->metadata);
         $this->assertEquals(self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer->_links->self->href);
         $this->assertEquals('application/hal+json', $customer->_links->self->type);
-
-
     }
 
     /** @test */
@@ -132,7 +130,6 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertNull($customer->email);
         $this->assertNull($customer->locale);
         $this->assertNull($customer->metadata);
-
     }
 
     /** @test */
@@ -173,7 +170,6 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals('customer', $customer->resource);
         $this->assertEquals('Test customer', $customer->name);
         $this->assertEquals('Test street 1', $customer->streetAndNumber);
-
     }
 
     /** @test */
@@ -267,8 +263,103 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer2->_links->self->href);
         $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d19', $customers->_links->next->href);
         $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_previous_id', $customers->_links->previous->href);
+    }
 
+    /** @test */
+    public function can_get_next_page():void
+    {
+        $responseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'customers' => [
+                    [
+                        'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d18',
+                        'resource' => 'customer',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL . '/customers',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL . '/customers?from=customer_previous_id',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
 
-                        
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        /** @var CustomerCollection $customers */
+        $customers = $this->client->customers->page();
+
+        $nextResponseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'customers' => [
+                    [
+                        'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d19',
+                        'resource' => 'customer',
+                        'name' => 'Test customer 2',
+                        'email' => 'me@me.com',
+                        'createdAt' => '2020-01-01T00:00:00+00:00',
+                        'testmode' => true,
+                        'metadata' => null,
+                        '_links' => [
+                            'self' => [
+                                'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19',
+                                'type' => 'application/hal+json',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => null,
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($nextResponseBodyArray);
+
+        /** @var CustomerCollection $nextCustomers */
+        $nextCustomers = $customers->next();
+
+        $this->assertWasSent(
+            VatlyApiClient::HTTP_GET,
+            self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18',
+            [],
+            null,
+        );
+
+        $customer = $nextCustomers[0];
+
+        $this->assertEquals(1, $nextCustomers->count);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18', $nextCustomers->_links->self->href);
+        $this->assertEquals('application/hal+json', $nextCustomers->_links->self->type);
+        $this->assertNull($nextCustomers->next());
+
+        $this->assertEquals('customer_78b146a7de7d417e9d68d7e6ef193d19', $customer->id);
+        $this->assertEquals('customer', $customer->resource);
+        $this->assertEquals('Test customer 2', $customer->name);
+        $this->assertEquals('me@me.com', $customer->email);
+        $this->assertEquals('2020-01-01T00:00:00+00:00', $customer->createdAt);
+        $this->assertTrue($customer->testmode);
+        $this->assertEquals(null, $customer->metadata);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer->_links->self->href);
+        $this->assertEquals('application/hal+json', $customer->_links->self->type);
     }
 }

@@ -1,41 +1,41 @@
 <?php
 
-namespace Vatly\API\Support\Types;
+namespace Vatly\API\Types;
 
-class OrderStatus
+class CheckoutStatus
 {
     /**
-     * The order has just been created.
+     * The checkout has just been created.
      */
     const STATUS_CREATED = "created";
 
     /**
-     * The order has been paid.
+     * The checkout has been paid.
      */
     const STATUS_PAID = "paid";
 
     /**
-     * The order has been authorized.
+     * The checkout has been authorized.
      */
     const STATUS_AUTHORIZED = "authorized";
 
     /**
-     * The order has been canceled.
+     * The checkout has been canceled.
      */
     const STATUS_CANCELED = "canceled";
 
     /**
-     * The order is completed.
+     * The checkout is completed.
      */
     const STATUS_COMPLETED = "completed";
 
     /**
-     * The order is expired.
+     * The checkout is expired.
      */
     const STATUS_EXPIRED = "expired";
 
     /**
-     * The order is pending.
+     * The checkout is pending.
      */
     const STATUS_PENDING = "pending";
 }

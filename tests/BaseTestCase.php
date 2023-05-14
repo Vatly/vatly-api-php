@@ -41,7 +41,7 @@ abstract class BaseTestCase extends TestCase
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): void {
         $message = 'Expected message was not sent.';
 
@@ -60,7 +60,7 @@ abstract class BaseTestCase extends TestCase
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): void {
         $message = 'Expected message was not sent.';
 

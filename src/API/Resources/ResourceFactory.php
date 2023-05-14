@@ -7,9 +7,9 @@ namespace Vatly\API\Resources;
 use ReflectionProperty;
 use Vatly\API\Resources\Links\BaseLinksResource;
 use Vatly\API\Resources\Links\LinksResourceFactory;
-use Vatly\API\Support\Types\Address;
-use Vatly\API\Support\Types\CurrencyAmount;
-use Vatly\API\Support\Types\WebhookUrls;
+use Vatly\API\Types\Address;
+use Vatly\API\Types\Money;
+use Vatly\API\Types\WebhookUrls;
 use Vatly\API\VatlyApiClient;
 
 #[\AllowDynamicProperties]
@@ -36,6 +36,7 @@ class ResourceFactory
                     }
 
                     $resource->{$property} = LinksResourceFactory::createResourceFromApiResult($value, new $linksClass);
+
                     break;
 
                 case 'customerDetails':
@@ -43,17 +44,21 @@ class ResourceFactory
                 case 'billingAddress':
                 case 'shippingAddress':
                     $resource->{$property} = Address::createResourceFromApiResult($value);
+
                     break;
 
                 case 'price':
+                case 'basePrice':
                 case 'taxAmount':
                 case 'total':
                 case 'subtotal':
-                    $resource->{$property} = CurrencyAmount::createResourceFromApiResult($value);
+                    $resource->{$property} = Money::createResourceFromApiResult($value);
+
                     break;
 
                 case 'webhookUrls':
                     $resource->{$property} = WebhookUrls::createResourceFromApiResult($value);
+
                     break;
 
                 default:

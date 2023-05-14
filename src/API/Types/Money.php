@@ -1,10 +1,17 @@
 <?php
 
-namespace Vatly\API\Support\Types;
+namespace Vatly\API\Types;
 
-class CurrencyAmount
+class Money
 {
+    /**
+     * @example "EUR"
+     */
     public string $currency;
+
+    /**
+     * @example "100.00"
+     */
     public string $value;
 
     public function __construct(string $currency, string $value)
@@ -13,7 +20,7 @@ class CurrencyAmount
         $this->value = $value;
     }
 
-    public static function createResourceFromApiResult($value): CurrencyAmount
+    public static function createResourceFromApiResult($value): Money
     {
         if (is_array($value)) {
             $value = (object) $value;

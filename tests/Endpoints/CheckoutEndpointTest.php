@@ -6,7 +6,7 @@ namespace Vatly\Tests\Endpoints;
 
 use Vatly\API\Resources\Checkout;
 use Vatly\API\Resources\CheckoutCollection;
-use Vatly\API\Support\Types\CheckoutStatus;
+use Vatly\API\Types\CheckoutStatus;
 use Vatly\API\VatlyApiClient;
 
 class CheckoutEndpointTest extends BaseEndpointTest
@@ -169,7 +169,6 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
         $this->assertEquals($responseBodyArray['metadata'],  (array) $checkout->metadata);
-
     }
 
     /** @test */
@@ -237,7 +236,90 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertTrue($checkout->testmode);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+    }
 
+    /** @test */
+    public function cat_get_to_next_page(): void
+    {
+        $responseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'checkouts' => [
+                    [
+                        'id' => "checkout_dummy_id",
+                        'resource' => 'checkout',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => null,
+            ],
 
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $checkoutCollection = $this->client->checkouts->page();
+
+        $nextResponseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'checkouts' => [
+                    [
+                        'id' => "checkout_next_dummy_id",
+                        'resource' => 'checkout',
+                        'merchantId' => 'merchant_123',
+                        'orderId' => 'order_123',
+                        'testmode' => true,
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => null,
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($nextResponseBodyArray);
+
+        /** @var CheckoutCollection $nextCheckoutCollection */
+        $nextCheckoutCollection = $checkoutCollection->next();
+
+        $this->assertWasSent(
+            VatlyApiClient::HTTP_GET,
+            self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+            [],
+            null
+        );
+
+        $checkout = $nextCheckoutCollection[0];
+
+        $this->assertInstanceOf(CheckoutCollection::class, $nextCheckoutCollection);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts', $nextCheckoutCollection->_links->previous->href);
+        $this->assertNull($nextCheckoutCollection->_links->next);
+        $this->assertEquals(1, $nextCheckoutCollection->count);
+
+        $this->assertInstanceOf(Checkout::class, $checkout);
+        $this->assertEquals("checkout_next_dummy_id", $checkout->id);
+        $this->assertEquals("checkout", $checkout->resource);
+        $this->assertEquals("merchant_123", $checkout->merchantId);
+        $this->assertEquals("order_123", $checkout->orderId);
+        $this->assertTrue($checkout->testmode);
     }
 }

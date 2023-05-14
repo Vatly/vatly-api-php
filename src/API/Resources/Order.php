@@ -3,9 +3,9 @@
 namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\OrderLinks;
-use Vatly\API\Support\Types\Address;
-use Vatly\API\Support\Types\CurrencyAmount;
-use Vatly\API\Support\Types\OrderStatus;
+use Vatly\API\Types\Address;
+use Vatly\API\Types\Money;
+use Vatly\API\Types\OrderStatus;
 
 class Order extends BaseResource
 {
@@ -36,11 +36,11 @@ class Order extends BaseResource
 
     public bool $testmode;
 
-    public CurrencyAmount $total;
+    public Money $total;
 
-    public CurrencyAmount $taxAmount;
+    public Money $taxAmount;
 
-    public CurrencyAmount $subtotal;
+    public Money $subtotal;
 
     /**
      * @example VAT
@@ -125,5 +125,4 @@ class Order extends BaseResource
     {
         return $this->status === OrderStatus::STATUS_PENDING;
     }
-
 }

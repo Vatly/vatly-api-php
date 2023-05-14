@@ -1,27 +1,42 @@
 <?php
 
-namespace Vatly\API\Support\Types;
+namespace Vatly\API\Types;
 
 class WebhookUrls
 {
     /**
-    'webhookUrls' => [ // optional
-        'paid' => 'https://your-website.com/webhooks/vatlify/order/123/paid',
-        'canceled' => 'https://your-website.com/webhooks/vatlify/order/123/canceled',
-        'refundCompleted' => 'https://your-website.com/webhooks/vatlify/order/123/refund-completed',
-        'refundCanceled' => 'https://your-website.com/webhooks/vatlify/order/123/refund-canceled',
-        'refundFailed' => 'https://your-website.com/webhooks/vatlify/order/123/refund-failed',
-        'chargebackReceived' => 'https://your-website.com/webhooks/vatlify/order/123/chargeback-received',
-        'chargebackReversed' => 'https://your-website.com/webhooks/vatlify/order/123/chargeback-reversed',
-    ],
+     * @example https://your-website.com/webhooks/vatlify/order/123/paid
      */
-
     public ?string $paid;
+
+    /**
+     * @example https://your-website.com/webhooks/vatlify/order/123/canceled
+     */
     public ?string $canceled;
+
+    /**
+     * @example https://your-website.com/webhooks/vatlify/order/123/refund-completed
+     */
     public ?string $refundCompleted;
+
+    /**
+     * @example https://your-website.com/webhooks/vatlify/order/123/refund-canceled
+     */
     public ?string $refundCanceled;
+
+    /**
+     * @example https://your-website.com/webhooks/vatlify/order/123/refund-failed
+     */
     public ?string $refundFailed;
+
+    /**
+     * @example https://your-website.com/webhooks/vatlify/order/123/chargeback-received
+     */
     public ?string $chargebackReceived;
+
+    /**
+     * @example https://your-website.com/webhooks/vatlify/order/123/chargeback-reversed
+     */
     public ?string $chargebackReversed;
 
     public static function createResourceFromApiResult($value): WebhookUrls

@@ -90,7 +90,7 @@ abstract class BaseResourcePage extends ArrayObject
 
         $result = $this->apiClient->performHttpCallToFullUrl(VatlyApiClient::HTTP_GET, $this->_links->previous->href);
 
-        $collection = new static($this->client, $result->count, $result->_links);
+        $collection = new static($this->apiClient, $result->count, $result->_links);
 
         foreach ($result->_embedded->{$collection->getCollectionResourceName()} as $dataResult) {
             $collection[] = ResourceFactory::createResourceFromApiResult($dataResult, $this->createResourceObject());

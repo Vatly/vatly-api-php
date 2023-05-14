@@ -2,7 +2,7 @@
 
 namespace Vatly\API\Resources\Links;
 
-use Vatly\API\Support\Types\Link;
+use Vatly\API\Types\Link;
 
 class PaginationLinks extends BaseLinksResource
 {

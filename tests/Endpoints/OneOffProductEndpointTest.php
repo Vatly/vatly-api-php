@@ -16,7 +16,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             'resource' => 'one_off_product',
             'name' => 'Test product',
             'description' => 'Test product description',
-            'price' => [
+            'basePrice' => [
                 'value' => "10.00",
                 'currency' => 'EUR',
             ],
@@ -34,7 +34,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $product = $this->client->oneOffProducts->create([
             'name' => 'Test product',
             'description' => 'Test product description',
-            'price' => [
+            'basePrice' => [
                 'value' => '10.00',
                 'currency' => 'EUR',
             ],
@@ -44,15 +44,15 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             VatlyApiClient::HTTP_POST,
             self::API_ENDPOINT_URL."/one-off-products",
             [],
-            '{"name":"Test product","description":"Test product description","price":{"value":"10.00","currency":"EUR"}}'
+            '{"name":"Test product","description":"Test product description","basePrice":{"value":"10.00","currency":"EUR"}}'
         );
 
         $this->assertEquals('one_off_product_78b146a7de7d417e9d68d7e6ef193d18', $product->id);
         $this->assertEquals('one_off_product', $product->resource);
         $this->assertEquals('Test product', $product->name);
         $this->assertEquals('Test product description', $product->description);
-        $this->assertEquals('10.00', $product->price->value);
-        $this->assertEquals('EUR', $product->price->currency);
+        $this->assertEquals('10.00', $product->basePrice->value);
+        $this->assertEquals('EUR', $product->basePrice->currency);
     }
 
     /** @test */
@@ -65,7 +65,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
             'resource' => 'one_off_product',
             'name' => 'Test product',
             'description' => 'Test product description',
-            'price' => [
+            'basePrice' => [
                 'value' => '10.00',
                 'currency' => 'EUR',
             ],
@@ -85,8 +85,8 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $this->assertEquals('one_off_product', $product->resource);
         $this->assertEquals('Test product', $product->name);
         $this->assertEquals('Test product description', $product->description);
-        $this->assertEquals('10.00', $product->price->value);
-        $this->assertEquals('EUR', $product->price->currency);
+        $this->assertEquals('10.00', $product->basePrice->value);
+        $this->assertEquals('EUR', $product->basePrice->currency);
 
         $this->assertEquals(self::API_ENDPOINT_URL. '/one-off-products/' . $productId, $product->_links->self->href);
         $this->assertEquals('application/hal+json', $product->_links->self->type);
@@ -145,5 +145,77 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $this->assertEquals('application/hal+json', $productCollection->_links->next->type);
         $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?to=one_off_product_previous_dummy_id', $productCollection->_links->previous->href);
         $this->assertEquals('application/hal+json', $productCollection->_links->previous->type);
+    }
+
+    /** @test */
+    public function can_get_next_page_of_one_off_products()
+    {
+        $responseBodyArray = [
+            'count' => 2,
+            '_embedded' => [
+                'one_off_products' => [
+                    [
+                        'id' => 'one_off_product_123',
+                        'resource' => 'one_off_product',
+                    ],
+                    [
+                        'id' => 'one_off_product_456',
+                        'resource' => 'one_off_product',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL . '/one-off-products',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL . '/one-off-products?from=one_off_product_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => null,
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $productCollection = $this->client->oneOffProducts->page();
+
+        $nextResponseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'one_off_products' => [
+                    [
+                        'id' => 'one_off_product_789',
+                        'resource' => 'one_off_product',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL . '/one-off-products?from=one_off_product_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => null,
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL . '/one-off-products',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($nextResponseBodyArray);
+
+        $nextProductCollection = $productCollection->next();
+
+        $this->assertEquals(1, $nextProductCollection->count);
+        $this->assertCount(1, $nextProductCollection);
+        $this->assertInstanceOf(OneOffProductCollection::class, $nextProductCollection);
+
+        $product = $nextProductCollection[0];
+        $this->assertInstanceOf(OneOffProduct::class, $product);
+        $this->assertEquals('one_off_product_789', $product->id);
+
+        $this->assertNull($nextProductCollection->next());
     }
 }

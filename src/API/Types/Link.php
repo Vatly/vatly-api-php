@@ -1,6 +1,6 @@
 <?php
 
-namespace Vatly\API\Support\Types;
+namespace Vatly\API\Types;
 
 class Link
 {

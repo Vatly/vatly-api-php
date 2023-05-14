@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\CheckoutLinks;
-use Vatly\API\Support\Types\CheckoutStatus;
-use Vatly\API\Support\Types\WebhookUrls;
+use Vatly\API\Types\CheckoutStatus;
+use Vatly\API\Types\WebhookUrls;
 
 class Checkout extends BaseResource
 {
@@ -112,6 +112,4 @@ class Checkout extends BaseResource
     {
         return $this->status === CheckoutStatus::STATUS_PENDING;
     }
-
-
 }

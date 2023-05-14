@@ -5,7 +5,7 @@ namespace Vatly\Tests\Endpoints;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Order;
 use Vatly\API\Resources\OrderCollection;
-use Vatly\API\Support\Types\OrderStatus;
+use Vatly\API\Types\OrderStatus;
 
 class OrderEndpointTest extends BaseEndpointTest
 {
@@ -84,6 +84,7 @@ class OrderEndpointTest extends BaseEndpointTest
 
         $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
+        /** @var Order $order */
         $order = $this->client->orders->get($orderId, []);
 
 
@@ -162,10 +163,6 @@ class OrderEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
-                'first' => [
-                    'href' => self::API_ENDPOINT_URL.'/orders',
-                    'type' => 'application/hal+json',
-                ],
             ],
         ];
 
@@ -183,10 +180,82 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('order_123', $orderCollection[0]->id);
         $this->assertEquals('order_456', $orderCollection[1]->id);
 
-        $this->assertEquals('https://api.vatly.com/v1/orders', $orderCollection->_links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders', $orderCollection->_links->self->href);
         $this->assertEquals('application/hal+json', $orderCollection->_links->self->type);
-        $this->assertEquals('https://api.vatly.com/v1/orders?from=order_next_dummy_id', $orderCollection->_links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id', $orderCollection->_links->next->href);
         $this->assertEquals('application/hal+json', $orderCollection->_links->next->type);
         $this->assertNull($orderCollection->_links->previous);
+
+        $this->assertNull($orderCollection->previous());
+    }
+
+    /** @test */
+    public function can_get_previous_page(): void
+    {
+        $responseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'orders' => [
+                    [
+                        'id' => 'order_123',
+                        'resource' => 'order',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => null,
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders?from=order_previous_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $orderCollection = $this->client->orders->page();
+
+        $previousResponseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'orders' => [
+                    [
+                        'id' => 'order_456',
+                        'resource' => 'order',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders?from=order_previous_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($previousResponseBodyArray);
+
+        $previousOrderCollection = $orderCollection->previous();
+
+        $this->assertEquals(1, $previousOrderCollection->count);
+        $this->assertCount(1, $previousOrderCollection);
+        $this->assertInstanceOf(OrderCollection::class, $previousOrderCollection);
+
+        $order = $previousOrderCollection[0];
+        $this->assertInstanceOf(Order::class, $order);
+        $this->assertEquals('order', $order->resource);
+        $this->assertEquals('order_456', $order->id);
     }
 }

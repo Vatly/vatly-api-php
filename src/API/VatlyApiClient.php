@@ -97,7 +97,6 @@ class VatlyApiClient
         $this->orders = new OrderEndpoint($this);
         $this->oneOffProducts = new OneOffProductEndpoint($this);
         $this->customers = new CustomerEndpoint($this);
-
     }
 
     protected function initializeVersionString(): void
