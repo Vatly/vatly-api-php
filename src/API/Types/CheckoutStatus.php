@@ -14,10 +14,6 @@ class CheckoutStatus
      */
     const STATUS_PAID = "paid";
 
-    /**
-     * The checkout has been authorized.
-     */
-    const STATUS_AUTHORIZED = "authorized";
 
     /**
      * The checkout has been canceled.

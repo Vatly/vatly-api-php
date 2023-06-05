@@ -6,7 +6,7 @@ namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\CheckoutLinks;
 use Vatly\API\Types\CheckoutStatus;
-use Vatly\API\Types\WebhookUrls;
+use Vatly\API\Types\CheckoutWebhookUrls;
 
 class Checkout extends BaseResource
 {
@@ -53,7 +53,7 @@ class Checkout extends BaseResource
     /* @see CheckoutStatus */
     public string $status;
 
-    public ?WebhookUrls $webhookUrls = null;
+    public ?CheckoutWebhookUrls $checkoutWebhookUrls = null;
     
     public ?string $createdAt = null;
 
@@ -71,14 +71,6 @@ class Checkout extends BaseResource
     public function isPaid(): bool
     {
         return $this->status === CheckoutStatus::STATUS_PAID;
-    }
-
-    /**
-     * Is this authorized?
-     */
-    public function isAuthorized(): bool
-    {
-        return $this->status === CheckoutStatus::STATUS_AUTHORIZED;
     }
 
     /**

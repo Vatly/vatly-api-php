@@ -14,10 +14,6 @@ class OrderStatus
      */
     const STATUS_PAID = "paid";
 
-    /**
-     * The order has been authorized.
-     */
-    const STATUS_AUTHORIZED = "authorized";
 
     /**
      * The order has been canceled.

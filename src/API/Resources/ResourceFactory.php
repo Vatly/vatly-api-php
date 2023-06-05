@@ -8,8 +8,8 @@ use ReflectionProperty;
 use Vatly\API\Resources\Links\BaseLinksResource;
 use Vatly\API\Resources\Links\LinksResourceFactory;
 use Vatly\API\Types\Address;
+use Vatly\API\Types\CheckoutWebhookUrls;
 use Vatly\API\Types\Money;
-use Vatly\API\Types\WebhookUrls;
 use Vatly\API\VatlyApiClient;
 
 #[\AllowDynamicProperties]
@@ -56,8 +56,8 @@ class ResourceFactory
 
                     break;
 
-                case 'webhookUrls':
-                    $resource->{$property} = WebhookUrls::createResourceFromApiResult($value);
+                case 'checkoutWebhookUrls':
+                    $resource->{$property} = CheckoutWebhookUrls::createResourceFromApiResult($value);
 
                     break;
 

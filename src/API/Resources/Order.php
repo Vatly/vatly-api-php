@@ -109,14 +109,6 @@ class Order extends BaseResource
     }
 
     /**
-     * Is this order authorized?
-     */
-    public function isAuthorized(): bool
-    {
-        return $this->status === OrderStatus::STATUS_AUTHORIZED;
-    }
-
-    /**
      * Is this order canceled?
      */
     public function isCanceled(): bool

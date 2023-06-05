@@ -2,7 +2,7 @@
 
 namespace Vatly\API\Types;
 
-class WebhookUrls
+class CheckoutWebhookUrls
 {
     /**
      * @example https://your-website.com/webhooks/vatlify/order/123/paid
@@ -39,7 +39,7 @@ class WebhookUrls
      */
     public ?string $chargebackReversed;
 
-    public static function createResourceFromApiResult($value): WebhookUrls
+    public static function createResourceFromApiResult($value): CheckoutWebhookUrls
     {
         if (is_array($value)) {
             $value = (object) $value;
