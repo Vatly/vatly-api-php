@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Vatly\API;
 
 use Vatly\API\Endpoints\CheckoutEndpoint;
+use Vatly\API\Endpoints\CustomerEndpoint;
+use Vatly\API\Endpoints\OneOffProductEndpoint;
+use Vatly\API\Endpoints\OrderEndpoint;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Exceptions\HttpAdapterDoesNotSupportDebuggingException;
 use Vatly\API\HttpClient\DefaultHttpClientFactory;
@@ -59,6 +62,12 @@ class VatlyApiClient
 
     public CheckoutEndpoint $checkouts;
 
+    public OrderEndpoint $orders;
+
+    public OneOffProductEndpoint $oneOffProducts;
+
+    public CustomerEndpoint $customers;
+
     /**
      * @throws \Vatly\API\Exceptions\IncompatiblePlatformException
      */
@@ -85,6 +94,9 @@ class VatlyApiClient
     protected function initializeEndpoints(): void
     {
         $this->checkouts = new CheckoutEndpoint($this);
+        $this->orders = new OrderEndpoint($this);
+        $this->oneOffProducts = new OneOffProductEndpoint($this);
+        $this->customers = new CustomerEndpoint($this);
     }
 
     protected function initializeVersionString(): void
@@ -154,7 +166,7 @@ class VatlyApiClient
      * @return \stdClass
      * @throws ApiException
      */
-    public function performHttpCall(string $httpMethod, string $apiMethod, string $httpBody = null): ?object
+    public function performHttpCall(string $httpMethod, string $apiMethod, ?string $httpBody = null): ?object
     {
         $url = $this->apiEndpoint . "/" . self::API_VERSION . "/" . $apiMethod;
 

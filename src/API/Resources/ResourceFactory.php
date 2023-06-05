@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Vatly\API\Resources;
 
+use ReflectionProperty;
+use Vatly\API\Resources\Links\BaseLinksResource;
+use Vatly\API\Resources\Links\LinksResourceFactory;
+use Vatly\API\Types\Address;
+use Vatly\API\Types\CheckoutWebhookUrls;
+use Vatly\API\Types\Money;
 use Vatly\API\VatlyApiClient;
 
 #[\AllowDynamicProperties]
@@ -20,7 +26,46 @@ class ResourceFactory
     public static function createResourceFromApiResult(object $apiResult, BaseResource $resource): BaseResource
     {
         foreach ($apiResult as $property => $value) {
-            $resource->{$property} = $value;
+            switch ($property) {
+                case '_links':
+                    try {
+                        $rp = new ReflectionProperty(get_class($resource), '_links');
+                        $linksClass = $rp->getType()->getName();
+                    } catch (\ReflectionException $e) {
+                        $linksClass = BaseLinksResource::class;
+                    }
+
+                    $resource->{$property} = LinksResourceFactory::createResourceFromApiResult($value, new $linksClass);
+
+                    break;
+
+                case 'customerDetails':
+                case 'merchantDetails':
+                case 'billingAddress':
+                case 'shippingAddress':
+                    $resource->{$property} = Address::createResourceFromApiResult($value);
+
+                    break;
+
+                case 'price':
+                case 'basePrice':
+                case 'taxAmount':
+                case 'total':
+                case 'subtotal':
+                    $resource->{$property} = Money::createResourceFromApiResult($value);
+
+                    break;
+
+                case 'checkoutWebhookUrls':
+                    $resource->{$property} = CheckoutWebhookUrls::createResourceFromApiResult($value);
+
+                    break;
+
+                default:
+                    $resource->{$property} = $value;
+
+                    break;
+            }
         }
 
         return $resource;

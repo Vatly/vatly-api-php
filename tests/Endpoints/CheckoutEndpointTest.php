@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Vatly\Tests\Endpoints;
 
 use Vatly\API\Resources\Checkout;
+use Vatly\API\Resources\CheckoutCollection;
+use Vatly\API\Types\CheckoutStatus;
 use Vatly\API\VatlyApiClient;
 
 class CheckoutEndpointTest extends BaseEndpointTest
@@ -12,9 +14,39 @@ class CheckoutEndpointTest extends BaseEndpointTest
     /** @test */
     public function can_create_checkout()
     {
-        $returnObject = new Checkout($this->client);
-        $returnObject->id = "checkout_dummy_id";
-        $this->httpClient->setSendReturnObject($returnObject);
+        $responseBodyArray = [
+            'id' => "checkout_dummy_id",
+            'resource' => 'checkout',
+            'merchantId' => 'merchant_123',
+            'testmode' => true,
+            'redirectUrlSuccess' => 'https://www.sandorian.com/success',
+            'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
+            'status' => CheckoutStatus::STATUS_CREATED,
+            'metadata' => [
+                'order_id' => '123456',
+            ],
+            'checkoutWebhookUrls' => [
+                'paid' => 'https://your-website.com/webhooks/vatlify/order/123/paid',
+                'canceled' => 'https://your-website.com/webhooks/vatlify/order/123/canceled',
+                'refundCompleted' => 'https://your-website.com/webhooks/vatlify/order/123/refund-completed',
+                'refundCanceled' => 'https://your-website.com/webhooks/vatlify/order/123/refund-canceled',
+                'refundFailed' => 'https://your-website.com/webhooks/vatlify/order/123/refund-failed',
+                'chargebackReceived' => null,
+                'chargebackReversed' => null,
+            ],
+            '_links' => [
+                'checkoutUrl' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                    'type' => 'text/html',
+                ],
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id',
+                    'type' => 'application/json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         $checkout = $this->client->checkouts->create([
             'profileId' => 'profile_123', // TODO check if this is required at this moment
@@ -29,18 +61,36 @@ class CheckoutEndpointTest extends BaseEndpointTest
             ],
             'redirectUrlSuccess' => 'https://www.sandorian.com/success',
             'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
-            //'metadata' // optional
-            //'webhookUrls' => [], // optional
+            'testmode' => true,
+            'metadata' => ['order_id' => '123456'], // optional
+            'webhookUrls' => [
+                'paid' => 'https://your-website.com/webhooks/vatlify/order/123/paid',
+                'canceled' => 'https://your-website.com/webhooks/vatlify/order/123/canceled',
+                'refundCompleted' => 'https://your-website.com/webhooks/vatlify/order/123/refund-completed',
+                'refundCanceled' => 'https://your-website.com/webhooks/vatlify/order/123/refund-canceled',
+                'refundFailed' => 'https://your-website.com/webhooks/vatlify/order/123/refund-failed',
+            ],
         ], [
             //
         ]);
 
         $this->assertInstanceOf(Checkout::class, $checkout);
         $this->assertEquals("checkout_dummy_id", $checkout->id);
+        $this->assertEquals("merchant_123", $checkout->merchantId);
+        $this->assertEquals("checkout", $checkout->resource);
+        $this->assertEquals(CheckoutStatus::STATUS_CREATED, $checkout->status);
+        $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
+        $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
+        $this->assertTrue($checkout->testmode);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+        $this->assertEquals($responseBodyArray['metadata'], (array) $checkout->metadata);
+        $this->assertEquals($responseBodyArray['checkoutWebhookUrls']['paid'], $checkout->checkoutWebhookUrls->paid);
+        $this->assertNull($checkout->checkoutWebhookUrls->chargebackReceived);
 
         $this->assertWasSentOnly(
             VatlyApiClient::HTTP_POST,
-            "https://api.vatly.com/v1/checkouts",
+            self::API_ENDPOINT_URL."/checkouts",
             [],
             '{
                         "profileId":"profile_123",
@@ -53,7 +103,18 @@ class CheckoutEndpointTest extends BaseEndpointTest
                             }
                         ],
                         "redirectUrlSuccess":"https://www.sandorian.com/success",
-                        "redirectUrlCanceled":"https://www.sandorian.com/canceled"
+                        "redirectUrlCanceled":"https://www.sandorian.com/canceled",
+                        "testmode":true,
+                        "metadata": {
+                            "order_id": "123456"
+                        },
+                        "webhookUrls": {
+                            "paid": "https://your-website.com/webhooks/vatlify/order/123/paid",
+                            "canceled": "https://your-website.com/webhooks/vatlify/order/123/canceled",
+                            "refundCompleted": "https://your-website.com/webhooks/vatlify/order/123/refund-completed",
+                            "refundCanceled": "https://your-website.com/webhooks/vatlify/order/123/refund-canceled",
+                            "refundFailed": "https://your-website.com/webhooks/vatlify/order/123/refund-failed"
+                        }
                     }'
         );
     }
@@ -61,6 +122,204 @@ class CheckoutEndpointTest extends BaseEndpointTest
     /** @test */
     public function can_get_checkout()
     {
-        $this->markTestSkipped('TBI');
+        $responseBodyArray = [
+            'id' => "checkout_dummy_id",
+            'resource' => 'checkout',
+            'merchantId' => 'merchant_123',
+            'orderId' => 'order_123',
+            'testmode' => true,
+            'redirectUrlSuccess' => 'https://www.sandorian.com/success',
+            'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
+            'metadata' => [
+                'order_id' => '123456',
+            ],
+            'status' => CheckoutStatus::STATUS_PAID,
+            '_links' => [
+                'checkoutUrl' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                    'type' => 'text/html',
+                ],
+                'self' => [
+                   'href' => self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id',
+                   'type' => 'application/hal+json',
+                ],
+            ],
+            'webhookUrls' => [
+                'paid' => 'https://your-website.com/webhooks/vatlify/order/123/paid',
+                'canceled' => 'https://your-website.com/webhooks/vatlify/order/123/canceled',
+                'refundCompleted' => 'https://your-website.com/webhooks/vatlify/order/123/refund-completed',
+                'refundCanceled' => 'https://your-website.com/webhooks/vatlify/order/123/refund-canceled',
+                'refundFailed' => 'https://your-website.com/webhooks/vatlify/order/123/refund-failed',
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $checkout = $this->client->checkouts->get('checkout_dummy_id', []);
+
+        $this->assertInstanceOf(Checkout::class, $checkout);
+        $this->assertEquals("checkout_dummy_id", $checkout->id);
+        $this->assertEquals("merchant_123", $checkout->merchantId);
+        $this->assertEquals("order_123", $checkout->orderId);
+        $this->assertEquals("checkout", $checkout->resource);
+        $this->assertEquals(CheckoutStatus::STATUS_PAID, $checkout->status);
+        $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
+        $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
+        $this->assertTrue($checkout->testmode);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+        $this->assertEquals($responseBodyArray['metadata'],  (array) $checkout->metadata);
+    }
+
+    /** @test */
+    public function can_get_checkouts_list()
+    {
+        $responseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'checkouts' => [
+                    [
+                        'id' => "checkout_dummy_id",
+                        'resource' => 'checkout',
+                        'merchantId' => 'merchant_123',
+                        'orderId' => 'order_123',
+                        'testmode' => true,
+                        'redirectUrlSuccess' => 'https://www.sandorian.com/success',
+                        'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
+                        'status' => CheckoutStatus::STATUS_PENDING,
+                        '_links' => [
+                            'checkoutUrl' => [
+                                'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                                'type' => 'text/html',
+                            ],
+                            'self' => [
+                                'href' => self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id',
+                                'type' => 'application/hal+json',
+                            ],
+                        ],
+                        'webhookUrls' => [],
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => null,
+            ],
+
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $checkoutCollection = $this->client->checkouts->page();
+
+        $this->assertInstanceOf(CheckoutCollection::class, $checkoutCollection);
+        $this->assertNull($checkoutCollection->_links->previous);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id', $checkoutCollection->_links->next->href);
+        $this->assertEquals(1, $checkoutCollection->count);
+
+        $checkout = $checkoutCollection[0];
+        $this->assertInstanceOf(Checkout::class, $checkout);
+        $this->assertEquals("checkout_dummy_id", $checkout->id);
+        $this->assertEquals("merchant_123", $checkout->merchantId);
+        $this->assertEquals("order_123", $checkout->orderId);
+        $this->assertEquals("checkout", $checkout->resource);
+        $this->assertEquals(CheckoutStatus::STATUS_PENDING, $checkout->status);
+        $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
+        $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
+        $this->assertTrue($checkout->testmode);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+    }
+
+    /** @test */
+    public function cat_get_to_next_page(): void
+    {
+        $responseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'checkouts' => [
+                    [
+                        'id' => "checkout_dummy_id",
+                        'resource' => 'checkout',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => null,
+            ],
+
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $checkoutCollection = $this->client->checkouts->page();
+
+        $nextResponseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'checkouts' => [
+                    [
+                        'id' => "checkout_next_dummy_id",
+                        'resource' => 'checkout',
+                        'merchantId' => 'merchant_123',
+                        'orderId' => 'order_123',
+                        'testmode' => true,
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => null,
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL.'/checkouts',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($nextResponseBodyArray);
+
+        /** @var CheckoutCollection $nextCheckoutCollection */
+        $nextCheckoutCollection = $checkoutCollection->next();
+
+        $this->assertWasSent(
+            VatlyApiClient::HTTP_GET,
+            self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+            [],
+            null
+        );
+
+        $checkout = $nextCheckoutCollection[0];
+
+        $this->assertInstanceOf(CheckoutCollection::class, $nextCheckoutCollection);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts', $nextCheckoutCollection->_links->previous->href);
+        $this->assertNull($nextCheckoutCollection->_links->next);
+        $this->assertEquals(1, $nextCheckoutCollection->count);
+
+        $this->assertInstanceOf(Checkout::class, $checkout);
+        $this->assertEquals("checkout_next_dummy_id", $checkout->id);
+        $this->assertEquals("checkout", $checkout->resource);
+        $this->assertEquals("merchant_123", $checkout->merchantId);
+        $this->assertEquals("order_123", $checkout->orderId);
+        $this->assertTrue($checkout->testmode);
     }
 }

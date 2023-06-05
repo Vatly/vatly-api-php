@@ -4,7 +4,14 @@ declare(strict_types=1);
 
 namespace Vatly\API\Resources;
 
+use Vatly\API\Resources\Links\BaseLinksResource;
 use Vatly\API\VatlyApiClient;
+
+/**
+ * Class BaseResource
+ *
+ * @property BaseLinksResource $_links
+ */
 
 #[\AllowDynamicProperties]
 abstract class BaseResource

@@ -16,7 +16,7 @@ class SpyHttpClient implements HttpClientInterface
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): ?object {
         $this->recordSend($httpMethod, $url, $headers, $httpBody);
 
@@ -28,25 +28,44 @@ class SpyHttpClient implements HttpClientInterface
         return 'SpyHttpClient/007';
     }
 
-    public function setSendReturnObject(object $value): self
+    /**
+     * @param object|array|string $value
+     * @return $this
+     */
+    public function setSendReturnObject($value): self
     {
+        if (! is_object($value)) {
+            throw new \InvalidArgumentException('Value must be an object or array.');
+        }
         $this->sendReturn = $value;
 
         return $this;
+    }
+
+    public function setSendReturnObjectFromArray(array $value): self
+    {
+        return $this->setSendReturnObject(json_decode(json_encode($value)));
+    }
+
+    public function setSendReturnObjectFromString(string $value): self
+    {
+        return $this->setSendReturnObject(json_decode($value));
     }
 
     public function wasSent(
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): bool {
-        $sanitizedHttpBody = json_encode(json_decode(
-            $httpBody,
-            false,
-            512,
-            JSON_THROW_ON_ERROR
-        ));
+        $sanitizedHttpBody = ($httpBody === null)
+            ? null
+            : json_encode(json_decode(
+                $httpBody,
+                false,
+                512,
+                JSON_THROW_ON_ERROR
+            ));
 
         return count(array_filter($this->recordedSends, function ($item) use ($httpMethod, $url, $headers, $sanitizedHttpBody) {
             return $item['httpMethod'] === $httpMethod
@@ -69,7 +88,7 @@ class SpyHttpClient implements HttpClientInterface
         string $httpMethod,
         string $url,
         array $headers,
-        string $httpBody
+        ?string $httpBody
     ): bool {
         if ($this->countRecordedSends() !== 1) {
             return false;

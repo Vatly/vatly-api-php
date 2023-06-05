@@ -8,5 +8,5 @@ use Vatly\Tests\BaseTestCase;
 
 abstract class BaseEndpointTest extends BaseTestCase
 {
-    //
+    public const API_ENDPOINT_URL = 'https://api.vatly.com/v1';
 }
