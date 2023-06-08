@@ -79,6 +79,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
 
         $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
+        /** @var OneOffProduct $product */
         $product = $this->client->oneOffProducts->get($productId);
 
         $this->assertEquals($productId, $product->id);
