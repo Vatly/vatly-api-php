@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Vatly\API\Resources;
 
+use ReflectionNamedType;
 use ReflectionProperty;
 use Vatly\API\Resources\Links\BaseLinksResource;
 use Vatly\API\Resources\Links\LinksResourceFactory;
@@ -30,7 +31,12 @@ class ResourceFactory
                 case '_links':
                     try {
                         $rp = new ReflectionProperty(get_class($resource), '_links');
-                        $linksClass = $rp->getType()->getName();
+                        $rpType = $rp->getType();
+                        if ($rpType instanceof ReflectionNamedType) {
+                            $linksClass = $rpType->getName();
+                        } else {
+                            $linksClass = BaseLinksResource::class;
+                        }
                     } catch (\ReflectionException $e) {
                         $linksClass = BaseLinksResource::class;
                     }

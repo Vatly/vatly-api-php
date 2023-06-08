@@ -26,8 +26,8 @@ class CheckoutEndpoint extends BaseEndpoint
     }
 
     /**
-     * @throws \Vatly\API\Exceptions\ApiException
      * @return Checkout|BaseResource
+     *@throws ApiException
      */
     public function create(array $payload, array $filters = []): BaseResource
     {
@@ -35,8 +35,8 @@ class CheckoutEndpoint extends BaseEndpoint
     }
 
     /**
-     * @throws \Vatly\API\Exceptions\ApiException
      * @return Checkout|BaseResource
+     *@throws ApiException
      */
     public function get(string $id, array $parameters = []): BaseResource
     {
