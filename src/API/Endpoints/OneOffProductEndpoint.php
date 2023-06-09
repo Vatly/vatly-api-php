@@ -23,9 +23,9 @@ class OneOffProductEndpoint extends BaseEndpoint
 
     /**
      * @throws ApiException
-     * @return OneOffProduct
+     * @return OneOffProduct|BaseResource
      */
-    public function get(string $id, array $parameters = [])
+    public function get(string $id, array $parameters = []): BaseResource
     {
         return $this->rest_read($id, $parameters);
     }

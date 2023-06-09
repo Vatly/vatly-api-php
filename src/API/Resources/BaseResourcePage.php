@@ -35,7 +35,7 @@ abstract class BaseResourcePage extends ArrayObject
      * @param int $count
      * @param PaginationLinks|null $_links
      */
-    public function __construct(VatlyApiClient $apiClient, $count, $_links)
+    final public function __construct(VatlyApiClient $apiClient, $count, $_links)
     {
         $this->apiClient = $apiClient;
         $this->count = $count;
