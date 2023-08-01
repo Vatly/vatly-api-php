@@ -4,57 +4,9 @@ namespace Vatly\Tests\Endpoints;
 
 use Vatly\API\Resources\OneOffProduct;
 use Vatly\API\Resources\OneOffProductCollection;
-use Vatly\API\VatlyApiClient;
 
 class OneOffProductEndpointTest extends BaseEndpointTest
 {
-    /** @test */
-    public function can_create_one_off_product()
-    {
-        $responseBodyArray = [
-            'id' => 'one_off_product_78b146a7de7d417e9d68d7e6ef193d18',
-            'resource' => 'one_off_product',
-            'name' => 'Test product',
-            'description' => 'Test product description',
-            'basePrice' => [
-                'value' => "10.00",
-                'currency' => 'EUR',
-            ],
-            '_links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL. '/one-off-products/one_off_product_78b146a7de7d417e9d68d7e6ef193d18',
-                    'type' => 'application/hal+json',
-                ],
-            ],
-        ];
-
-        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
-
-        /** @var OneOffProduct $product */
-        $product = $this->client->oneOffProducts->create([
-            'name' => 'Test product',
-            'description' => 'Test product description',
-            'basePrice' => [
-                'value' => '10.00',
-                'currency' => 'EUR',
-            ],
-        ]);
-
-        $this->assertWasSentOnly(
-            VatlyApiClient::HTTP_POST,
-            self::API_ENDPOINT_URL."/one-off-products",
-            [],
-            '{"name":"Test product","description":"Test product description","basePrice":{"value":"10.00","currency":"EUR"}}'
-        );
-
-        $this->assertEquals('one_off_product_78b146a7de7d417e9d68d7e6ef193d18', $product->id);
-        $this->assertEquals('one_off_product', $product->resource);
-        $this->assertEquals('Test product', $product->name);
-        $this->assertEquals('Test product description', $product->description);
-        $this->assertEquals('10.00', $product->basePrice->value);
-        $this->assertEquals('EUR', $product->basePrice->currency);
-    }
-
     /** @test */
     public function can_get_one_off_product()
     {

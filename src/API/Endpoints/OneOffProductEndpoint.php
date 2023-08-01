@@ -30,11 +30,6 @@ class OneOffProductEndpoint extends BaseEndpoint
         return $this->rest_read($id, $parameters);
     }
 
-    public function create(array $payload, array $filters = []): BaseResource
-    {
-        return $this->rest_create($payload, $filters);
-    }
-
     /**
      * @return OneOffProductCollection|BaseResourcePage
      * @throws ApiException
