@@ -9,7 +9,6 @@ use ReflectionProperty;
 use Vatly\API\Resources\Links\BaseLinksResource;
 use Vatly\API\Resources\Links\LinksResourceFactory;
 use Vatly\API\Types\Address;
-use Vatly\API\Types\CheckoutWebhookUrls;
 use Vatly\API\Types\Money;
 use Vatly\API\VatlyApiClient;
 
@@ -59,11 +58,6 @@ class ResourceFactory
                 case 'total':
                 case 'subtotal':
                     $resource->{$property} = Money::createResourceFromApiResult($value);
-
-                    break;
-
-                case 'checkoutWebhookUrls':
-                    $resource->{$property} = CheckoutWebhookUrls::createResourceFromApiResult($value);
 
                     break;
 

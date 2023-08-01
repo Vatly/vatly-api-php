@@ -6,7 +6,6 @@ namespace Vatly\API\Resources;
 
 use Vatly\API\Resources\Links\CheckoutLinks;
 use Vatly\API\Types\CheckoutStatus;
-use Vatly\API\Types\CheckoutWebhookUrls;
 
 class Checkout extends BaseResource
 {
@@ -53,8 +52,6 @@ class Checkout extends BaseResource
     /* @see CheckoutStatus */
     public string $status;
 
-    public ?CheckoutWebhookUrls $checkoutWebhookUrls = null;
-    
     public ?string $createdAt = null;
 
     /**

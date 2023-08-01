@@ -25,15 +25,6 @@ class CheckoutEndpointTest extends BaseEndpointTest
             'metadata' => [
                 'order_id' => '123456',
             ],
-            'checkoutWebhookUrls' => [
-                'paid' => 'https://your-website.com/webhooks/vatlify/order/123/paid',
-                'canceled' => 'https://your-website.com/webhooks/vatlify/order/123/canceled',
-                'refundCompleted' => 'https://your-website.com/webhooks/vatlify/order/123/refund-completed',
-                'refundCanceled' => 'https://your-website.com/webhooks/vatlify/order/123/refund-canceled',
-                'refundFailed' => 'https://your-website.com/webhooks/vatlify/order/123/refund-failed',
-                'chargebackReceived' => null,
-                'chargebackReversed' => null,
-            ],
             '_links' => [
                 'checkoutUrl' => [
                     'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
@@ -85,8 +76,6 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
         $this->assertEquals($responseBodyArray['metadata'], (array) $checkout->metadata);
-        $this->assertEquals($responseBodyArray['checkoutWebhookUrls']['paid'], $checkout->checkoutWebhookUrls->paid);
-        $this->assertNull($checkout->checkoutWebhookUrls->chargebackReceived);
 
         $this->assertWasSentOnly(
             VatlyApiClient::HTTP_POST,
