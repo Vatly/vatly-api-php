@@ -30,9 +30,9 @@ class Order extends BaseResource
     public string $customerId;
 
     /**
-     * @example 2020-01-01
+     * @example 2023-08-11T10:48:51+02:00
      */
-    public string $orderedAt;
+    public string $createdAt;
 
     public bool $testmode;
 

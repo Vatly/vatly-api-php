@@ -26,7 +26,7 @@ class OrderEndpointTest extends BaseEndpointTest
                 'order_id' => '123456',
             ],
             'paymentMethod' => 'ideal',
-            'orderedAt' => '2020-01-01',
+            'createdAt' => '2023-01-11T10:50:50+02:00',
             'status' => OrderStatus::STATUS_PAID,
             'invoiceNumber' => 'INV 123456',
             'total' => [
@@ -141,7 +141,7 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('20.00', $order->taxAmount->value);
         $this->assertEquals('EUR', $order->taxAmount->currency);
         $this->assertEquals('INV 123456', $order->invoiceNumber);
-        $this->assertEquals('2020-01-01', $order->orderedAt);
+        $this->assertEquals('2023-01-11T10:50:50+02:00', $order->createdAt);
 
         $this->assertEquals('https://api.vatly.com/v1/order/order_dummy_id', $order->_links->self->href);
         $this->assertEquals('application/hal+json', $order->_links->self->type);
