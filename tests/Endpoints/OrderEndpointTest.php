@@ -70,11 +70,11 @@ class OrderEndpointTest extends BaseEndpointTest
                     "taxPercentage" => "20.00",
                     '_links' => [
                         'self' => [
-                            'href' => self::API_ENDPOINT_URL.'/order/'.$orderId.'/line/order_item_2a46f4c01d3b47979f4d7b3f58c98be7',
+                            'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId.'/line/order_item_2a46f4c01d3b47979f4d7b3f58c98be7',
                             'type' => 'application/hal+json',
                         ],
                         'order' => [
-                            'href' => self::API_ENDPOINT_URL.'/order/'.$orderId,
+                            'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId,
                             'type' => 'application/hal+json',
                         ],
                     ],
@@ -107,7 +107,7 @@ class OrderEndpointTest extends BaseEndpointTest
             ],
             '_links' => [
                 'self' => [
-                    'href' => self::API_ENDPOINT_URL.'/order/'.$orderId,
+                    'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId,
                     'type' => 'application/hal+json',
                 ],
                 'customer' => [
@@ -143,7 +143,7 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('INV 123456', $order->invoiceNumber);
         $this->assertEquals('2023-01-11T10:50:50+02:00', $order->createdAt);
 
-        $this->assertEquals('https://api.vatly.com/v1/order/order_dummy_id', $order->_links->self->href);
+        $this->assertEquals('https://api.vatly.com/v1/orders/order_dummy_id', $order->_links->self->href);
         $this->assertEquals('application/hal+json', $order->_links->self->type);
         $this->assertEquals('https://api.vatly.com/v1/customer/customer_123', $order->_links->customer->href);
         $this->assertEquals('application/hal+json', $order->_links->customer->type);

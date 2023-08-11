@@ -83,7 +83,7 @@ class Order extends BaseResource
      */
     public function lines(): OrderLineCollection
     {
-        return ResourceFactory::createCursorResourcePage(
+        return ResourceFactory::createCursorResourceCollection(
             $this->apiClient,
             $this->lines,
             OrderLine::class,

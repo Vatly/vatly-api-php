@@ -1,0 +1,163 @@
+<?php
+
+namespace Vatly\Tests\Endpoints;
+
+use Vatly\API\Exceptions\ApiException;
+use Vatly\API\Resources\Chargeback;
+use Vatly\API\Resources\ChargebackCollection;
+
+class OrderChargebackEndpointTest extends BaseEndpointTest
+{
+    /** @test
+     * @throws ApiException
+     */
+    public function can_get_a_order_chargeback(): void
+    {
+        $chargebackId = 'chargeback_dummy_id';
+        $originalOrderId = 'original_order_dummy_id';
+        $responseBodyArray = [
+            'id' => $chargebackId,
+            'resource' => 'chargeback',
+            'testmode' => false,
+            'originalOrderId' => $originalOrderId,
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        /** @var Chargeback $chargeback */
+        $chargeback = $this->client->orderChargebacks->getForOrderId($originalOrderId, $chargebackId);
+        $this->assertInstanceOf(Chargeback::class, $chargeback);
+        $this->assertEquals('chargeback', $chargeback->resource);
+        $this->assertEquals('chargeback_dummy_id', $chargeback->id);
+        $this->assertFalse($chargeback->testmode);
+        $this->assertEquals('original_order_dummy_id', $chargeback->originalOrderId);
+    }
+
+    /** @test */
+    public function get_order_chargebacks_list(): void
+    {
+        $originalOrderId = 'original_order_dummy_id';
+
+        $responseBodyArray = [
+            'count' => 2,
+            '_embedded' => [
+                'chargebacks' => [
+                    [
+                        'id' => 'chargeback_123',
+                        'resource' => 'chargeback',
+                        'originalOrderId' => $originalOrderId,
+                    ],
+                    [
+                        'id' => 'chargeback_456',
+                        'resource' => 'chargeback',
+                        'originalOrderId' => $originalOrderId,
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?from=chargeback_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => null,
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $chargebackCollection = $this->client->orderChargebacks->pageForOrderId($originalOrderId, );
+
+        $this->assertEquals(2, $chargebackCollection->count);
+        $this->assertCount(2, $chargebackCollection);
+        $this->assertInstanceOf(ChargebackCollection::class, $chargebackCollection);
+        $this->assertInstanceOf(Chargeback::class, $chargebackCollection[0]);
+        $this->assertEquals('chargeback', $chargebackCollection[0]->resource);
+        $this->assertEquals('chargeback_123', $chargebackCollection[0]->id);
+        $this->assertEquals($originalOrderId, $chargebackCollection[0]->originalOrderId);
+
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks', $chargebackCollection->_links->self->href);
+        $this->assertEquals('application/hal+json', $chargebackCollection->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?from=chargeback_next_dummy_id', $chargebackCollection->_links->next->href);
+        $this->assertEquals('application/hal+json', $chargebackCollection->_links->next->type);
+        $this->assertNull($chargebackCollection->_links->previous);
+
+        $this->assertNull($chargebackCollection->previous());
+    }
+
+    /** @test */
+    public function can_get_previous_page(): void
+    {
+        $originalOrderId = 'original_order_dummy_id';
+
+        $responseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'chargebacks' => [
+                    [
+                        'id' => 'chargeback_123',
+                        'resource' => 'chargeback',
+                        'originalOrderId' => $originalOrderId,
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => null,
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_previous_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $chargebackCollection = $this->client->orderChargebacks->pageForOrderId($originalOrderId);
+
+        $previousResponseBodyArray = [
+            'count' => 1,
+            '_embedded' => [
+                'chargebacks' => [
+                    [
+                        'id' => 'chargeback_456',
+                        'resource' => 'chargeback',
+                    ],
+                ],
+            ],
+            '_links' => [
+                'self' => [
+                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_previous_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'next' => [
+                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
+                    'type' => 'application/hal+json',
+                ],
+                'previous' => [
+                    'href' => self::API_ENDPOINT_URL.'/chargebacks',
+                    'type' => 'application/hal+json',
+                ],
+            ],
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($previousResponseBodyArray);
+
+        $previousChargebackCollection = $chargebackCollection->previous();
+
+        $this->assertEquals(1, $previousChargebackCollection->count);
+        $this->assertCount(1, $previousChargebackCollection);
+        $this->assertInstanceOf(ChargebackCollection::class, $previousChargebackCollection);
+
+        $chargeback = $previousChargebackCollection[0];
+        $this->assertInstanceOf(Chargeback::class, $chargeback);
+        $this->assertEquals('chargeback', $chargeback->resource);
+        $this->assertEquals('chargeback_456', $chargeback->id);
+    }
+}

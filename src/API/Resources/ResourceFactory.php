@@ -55,6 +55,8 @@ class ResourceFactory
                 case 'price':
                 case 'basePrice':
                 case 'taxAmount':
+                case 'amount':
+                case 'settlementAmount':
                 case 'total':
                 case 'subtotal':
                     $resource->{$property} = Money::createResourceFromApiResult($value);
@@ -79,7 +81,7 @@ class ResourceFactory
      * @param string|null $resourcePageClass
      * @return mixed
      */
-    public static function createCursorResourcePage(
+    public static function createCursorResourceCollection(
         VatlyApiClient $client,
         array $input,
         string $resourceClass,
@@ -87,7 +89,7 @@ class ResourceFactory
         ?string $resourcePageClass = null
     ) {
         if (null === $resourcePageClass) {
-            $resourcePageClass = $resourceClass.'Page';
+            $resourcePageClass = $resourceClass.'Collection';
         }
 
         $data = new $resourcePageClass($client, count($input), $_links);
