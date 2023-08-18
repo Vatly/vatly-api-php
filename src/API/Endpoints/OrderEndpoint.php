@@ -34,13 +34,17 @@ class OrderEndpoint extends BaseEndpoint
      * @return OrderCollection|BaseResourcePage
      * @throws ApiException
      */
-    public function page(?string $from = null, ?int $limit = null, array $parameters = []): BaseResourcePage
-    {
-        return $this->rest_list($from, $limit, $parameters);
+    public function page(
+        ?string $starting_after = null,
+        ?string $ending_before = null,
+        ?int $limit = null,
+        array $parameters = []
+    ): BaseResourcePage {
+        return $this->rest_list($starting_after, $ending_before, $limit, $parameters);
     }
 
-    protected function getResourcePageObject(int $count, PaginationLinks $_links): BaseResourcePage
+    protected function getResourcePageObject(int $count, PaginationLinks $links): BaseResourcePage
     {
-        return new OrderCollection($this->client, $count, $_links);
+        return new OrderCollection($this->client, $count, $links);
     }
 }

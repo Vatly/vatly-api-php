@@ -50,5 +50,5 @@ class Customer extends BaseResource
      */
     public $metadata;
 
-    public CustomerLinks $_links;
+    public CustomerLinks $links;
 }

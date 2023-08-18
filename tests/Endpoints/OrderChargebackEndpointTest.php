@@ -31,6 +31,13 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
         $this->assertEquals('chargeback_dummy_id', $chargeback->id);
         $this->assertFalse($chargeback->testmode);
         $this->assertEquals('original_order_dummy_id', $chargeback->originalOrderId);
+
+        $this->assertWasSentOnly(
+            'GET',
+            self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks/'.$chargebackId,
+            [],
+            null
+        );
     }
 
     /** @test */
@@ -40,21 +47,19 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
 
         $responseBodyArray = [
             'count' => 2,
-            '_embedded' => [
-                'chargebacks' => [
-                    [
-                        'id' => 'chargeback_123',
-                        'resource' => 'chargeback',
-                        'originalOrderId' => $originalOrderId,
-                    ],
-                    [
-                        'id' => 'chargeback_456',
-                        'resource' => 'chargeback',
-                        'originalOrderId' => $originalOrderId,
-                    ],
+            'data' => [
+                [
+                    'id' => 'chargeback_123',
+                    'resource' => 'chargeback',
+                    'originalOrderId' => $originalOrderId,
+                ],
+                [
+                    'id' => 'chargeback_456',
+                    'resource' => 'chargeback',
+                    'originalOrderId' => $originalOrderId,
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks',
                     'type' => 'application/hal+json',
@@ -69,7 +74,7 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
 
         $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
-        $chargebackCollection = $this->client->orderChargebacks->pageForOrderId($originalOrderId, );
+        $chargebackCollection = $this->client->orderChargebacks->pageForOrderId($originalOrderId);
 
         $this->assertEquals(2, $chargebackCollection->count);
         $this->assertCount(2, $chargebackCollection);
@@ -79,13 +84,20 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
         $this->assertEquals('chargeback_123', $chargebackCollection[0]->id);
         $this->assertEquals($originalOrderId, $chargebackCollection[0]->originalOrderId);
 
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks', $chargebackCollection->_links->self->href);
-        $this->assertEquals('application/hal+json', $chargebackCollection->_links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?from=chargeback_next_dummy_id', $chargebackCollection->_links->next->href);
-        $this->assertEquals('application/hal+json', $chargebackCollection->_links->next->type);
-        $this->assertNull($chargebackCollection->_links->previous);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks', $chargebackCollection->links->self->href);
+        $this->assertEquals('application/hal+json', $chargebackCollection->links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?from=chargeback_next_dummy_id', $chargebackCollection->links->next->href);
+        $this->assertEquals('application/hal+json', $chargebackCollection->links->next->type);
+        $this->assertNull($chargebackCollection->links->previous);
 
         $this->assertNull($chargebackCollection->previous());
+
+        $this->assertWasSentOnly(
+            'GET',
+            self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?',
+            [],
+            null
+        );
     }
 
     /** @test */
@@ -95,16 +107,14 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
 
         $responseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'chargebacks' => [
-                    [
-                        'id' => 'chargeback_123',
-                        'resource' => 'chargeback',
-                        'originalOrderId' => $originalOrderId,
-                    ],
+            'data' => [
+                [
+                    'id' => 'chargeback_123',
+                    'resource' => 'chargeback',
+                    'originalOrderId' => $originalOrderId,
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
                     'type' => 'application/hal+json',
@@ -123,15 +133,13 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
 
         $previousResponseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'chargebacks' => [
-                    [
-                        'id' => 'chargeback_456',
-                        'resource' => 'chargeback',
-                    ],
+            'data' => [
+                [
+                    'id' => 'chargeback_456',
+                    'resource' => 'chargeback',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_previous_dummy_id',
                     'type' => 'application/hal+json',

@@ -68,7 +68,7 @@ class OrderEndpointTest extends BaseEndpointTest
                     ],
                     "taxName" => "VAT",
                     "taxPercentage" => "20.00",
-                    '_links' => [
+                    'links' => [
                         'self' => [
                             'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId.'/line/order_item_2a46f4c01d3b47979f4d7b3f58c98be7',
                             'type' => 'application/hal+json',
@@ -105,7 +105,7 @@ class OrderEndpointTest extends BaseEndpointTest
                 'vatNumber' => 'US123456789',
                 'email' => 'johndoe@example.com',
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId,
                     'type' => 'application/hal+json',
@@ -143,12 +143,12 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('INV 123456', $order->invoiceNumber);
         $this->assertEquals('2023-01-11T10:50:50+02:00', $order->createdAt);
 
-        $this->assertEquals('https://api.vatly.com/v1/orders/order_dummy_id', $order->_links->self->href);
-        $this->assertEquals('application/hal+json', $order->_links->self->type);
-        $this->assertEquals('https://api.vatly.com/v1/customer/customer_123', $order->_links->customer->href);
-        $this->assertEquals('application/hal+json', $order->_links->customer->type);
-        $this->assertEquals('https://api.vatly.com/v1/invoice/invoice_dummy_id', $order->_links->invoice->href);
-        $this->assertEquals('application/pdf', $order->_links->invoice->type);
+        $this->assertEquals('https://api.vatly.com/v1/orders/order_dummy_id', $order->links->self->href);
+        $this->assertEquals('application/hal+json', $order->links->self->type);
+        $this->assertEquals('https://api.vatly.com/v1/customer/customer_123', $order->links->customer->href);
+        $this->assertEquals('application/hal+json', $order->links->customer->type);
+        $this->assertEquals('https://api.vatly.com/v1/invoice/invoice_dummy_id', $order->links->invoice->href);
+        $this->assertEquals('application/pdf', $order->links->invoice->type);
 
 
         $this->assertEquals('Sandorian Consultancy B.V.', $order->merchantDetails->companyName);
@@ -195,19 +195,17 @@ class OrderEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 2,
-            '_embedded' => [
-                'orders' => [
-                    [
-                        'id' => 'order_123',
-                        'resource' => 'order',
-                    ],
-                    [
-                        'id' => 'order_456',
-                        'resource' => 'order',
-                    ],
+            'data' => [
+                [
+                    'id' => 'order_123',
+                    'resource' => 'order',
+                ],
+                [
+                    'id' => 'order_456',
+                    'resource' => 'order',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/orders',
                     'type' => 'application/hal+json',
@@ -234,11 +232,11 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('order_123', $orderCollection[0]->id);
         $this->assertEquals('order_456', $orderCollection[1]->id);
 
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders', $orderCollection->_links->self->href);
-        $this->assertEquals('application/hal+json', $orderCollection->_links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id', $orderCollection->_links->next->href);
-        $this->assertEquals('application/hal+json', $orderCollection->_links->next->type);
-        $this->assertNull($orderCollection->_links->previous);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders', $orderCollection->links->self->href);
+        $this->assertEquals('application/hal+json', $orderCollection->links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id', $orderCollection->links->next->href);
+        $this->assertEquals('application/hal+json', $orderCollection->links->next->type);
+        $this->assertNull($orderCollection->links->previous);
 
         $this->assertNull($orderCollection->previous());
     }
@@ -248,15 +246,13 @@ class OrderEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'orders' => [
-                    [
-                        'id' => 'order_123',
-                        'resource' => 'order',
-                    ],
+            'data' => [
+                [
+                    'id' => 'order_123',
+                    'resource' => 'order',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/orders?from=order_next_dummy_id',
                     'type' => 'application/hal+json',
@@ -275,15 +271,13 @@ class OrderEndpointTest extends BaseEndpointTest
 
         $previousResponseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'orders' => [
-                    [
-                        'id' => 'order_456',
-                        'resource' => 'order',
-                    ],
+            'data' => [
+                [
+                    'id' => 'order_456',
+                    'resource' => 'order',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/orders?from=order_previous_dummy_id',
                     'type' => 'application/hal+json',

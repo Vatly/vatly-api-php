@@ -47,5 +47,5 @@ class OrderLine extends BaseResource
      */
     public string $taxPercentage;
 
-    public OrderLineLinks $_links;
+    public OrderLineLinks $links;
 }

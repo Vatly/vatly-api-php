@@ -64,7 +64,7 @@ class Order extends BaseResource
 
     public bool $cancelled = false;
 
-    public OrderLinks $_links;
+    public OrderLinks $links;
 
     public Address $customerDetails;
 

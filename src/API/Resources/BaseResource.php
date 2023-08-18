@@ -10,7 +10,7 @@ use Vatly\API\VatlyApiClient;
 /**
  * Class BaseResource
  *
- * @property BaseLinksResource $_links
+ * @property BaseLinksResource $links
  */
 
 #[\AllowDynamicProperties]

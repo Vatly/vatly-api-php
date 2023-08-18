@@ -25,7 +25,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
             'metadata' => [
                 'order_id' => '123456',
             ],
-            '_links' => [
+            'links' => [
                 'checkoutUrl' => [
                     'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
                     'type' => 'text/html',
@@ -73,8 +73,8 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
         $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
         $this->assertTrue($checkout->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->links->self->href);
         $this->assertEquals($responseBodyArray['metadata'], (array) $checkout->metadata);
 
         $this->assertWasSentOnly(
@@ -123,7 +123,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
                 'order_id' => '123456',
             ],
             'status' => CheckoutStatus::STATUS_PAID,
-            '_links' => [
+            'links' => [
                 'checkoutUrl' => [
                     'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
                     'type' => 'text/html',
@@ -155,8 +155,8 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
         $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
         $this->assertTrue($checkout->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->links->self->href);
         $this->assertEquals($responseBodyArray['metadata'],  (array) $checkout->metadata);
     }
 
@@ -165,32 +165,30 @@ class CheckoutEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'checkouts' => [
-                    [
-                        'id' => "checkout_dummy_id",
-                        'resource' => 'checkout',
-                        'merchantId' => 'merchant_123',
-                        'orderId' => 'order_123',
-                        'testmode' => true,
-                        'redirectUrlSuccess' => 'https://www.sandorian.com/success',
-                        'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
-                        'status' => CheckoutStatus::STATUS_PENDING,
-                        '_links' => [
-                            'checkoutUrl' => [
-                                'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
-                                'type' => 'text/html',
-                            ],
-                            'self' => [
-                                'href' => self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id',
-                                'type' => 'application/hal+json',
-                            ],
+            'data' => [
+                [
+                    'id' => "checkout_dummy_id",
+                    'resource' => 'checkout',
+                    'merchantId' => 'merchant_123',
+                    'orderId' => 'order_123',
+                    'testmode' => true,
+                    'redirectUrlSuccess' => 'https://www.sandorian.com/success',
+                    'redirectUrlCanceled' => 'https://www.sandorian.com/canceled',
+                    'status' => CheckoutStatus::STATUS_PENDING,
+                    'links' => [
+                        'checkoutUrl' => [
+                            'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                            'type' => 'text/html',
                         ],
-                        'webhookUrls' => [],
+                        'self' => [
+                            'href' => self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id',
+                            'type' => 'application/hal+json',
+                        ],
                     ],
+                    'webhookUrls' => [],
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/checkouts',
                     'type' => 'application/hal+json',
@@ -209,8 +207,8 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $checkoutCollection = $this->client->checkouts->page();
 
         $this->assertInstanceOf(CheckoutCollection::class, $checkoutCollection);
-        $this->assertNull($checkoutCollection->_links->previous);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id', $checkoutCollection->_links->next->href);
+        $this->assertNull($checkoutCollection->links->previous);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id', $checkoutCollection->links->next->href);
         $this->assertEquals(1, $checkoutCollection->count);
 
         $checkout = $checkoutCollection[0];
@@ -223,8 +221,8 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
         $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
         $this->assertTrue($checkout->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->_links->checkoutUrl->href);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->_links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->links->self->href);
     }
 
     /** @test */
@@ -232,15 +230,13 @@ class CheckoutEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'checkouts' => [
-                    [
-                        'id' => "checkout_dummy_id",
-                        'resource' => 'checkout',
-                    ],
+            'data' => [
+                [
+                    'id' => "checkout_dummy_id",
+                    'resource' => 'checkout',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/checkouts',
                     'type' => 'application/hal+json',
@@ -260,18 +256,16 @@ class CheckoutEndpointTest extends BaseEndpointTest
 
         $nextResponseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'checkouts' => [
-                    [
-                        'id' => "checkout_next_dummy_id",
-                        'resource' => 'checkout',
-                        'merchantId' => 'merchant_123',
-                        'orderId' => 'order_123',
-                        'testmode' => true,
-                    ],
+            'data' => [
+                [
+                    'id' => "checkout_next_dummy_id",
+                    'resource' => 'checkout',
+                    'merchantId' => 'merchant_123',
+                    'orderId' => 'order_123',
+                    'testmode' => true,
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
                     'type' => 'application/hal+json',
@@ -300,8 +294,8 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $checkout = $nextCheckoutCollection[0];
 
         $this->assertInstanceOf(CheckoutCollection::class, $nextCheckoutCollection);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts', $nextCheckoutCollection->_links->previous->href);
-        $this->assertNull($nextCheckoutCollection->_links->next);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts', $nextCheckoutCollection->links->previous->href);
+        $this->assertNull($nextCheckoutCollection->links->next);
         $this->assertEquals(1, $nextCheckoutCollection->count);
 
         $this->assertInstanceOf(Checkout::class, $checkout);

@@ -217,28 +217,38 @@ abstract class BaseEndpoint
      * Get the page object that is used by this API endpoint. Every API endpoint uses one type of page object.
      *
      * @param int $count
-     * @param PaginationLinks $_links
+     * @param PaginationLinks $links
      *
      * @return BaseResourcePage
      */
-    abstract protected function getResourcePageObject(int $count, PaginationLinks $_links): BaseResourcePage;
+    abstract protected function getResourcePageObject(int $count, PaginationLinks $links): BaseResourcePage;
 
     /**
      * Get a page of objects from the REST API.
      *
-     * @param string|null $from The first resource ID you want to include in your list.
+     * @param string|null $starting_after
+     * @param string|null $ending_before
      * @param int|null $limit
      * @param array $filters
      *
      * @return BaseResourcePage
      * @throws \Vatly\API\Exceptions\ApiException
      */
-    protected function rest_list(?string $from = null, ?int $limit = null, array $filters = []): BaseResourcePage
-    {
+    protected function rest_list(
+        ?string $starting_after = null,
+        ?string $ending_before = null,
+        ?int $limit = null,
+        array $filters = []
+    ): BaseResourcePage {
+        if ($starting_after !== null && $ending_before !== null) {
+            throw new ApiException("You can only use one of starting_after or ending_before.");
+        }
+
         $apiPath = $this->getResourcePath() . $this->buildQueryString(
             array_merge(
                 [
-                    "from" => $from,
+                    "starting_after" => $starting_after,
+                    "ending_before" => $ending_before,
                     "limit" => $limit,
                 ],
                 $filters
@@ -248,11 +258,11 @@ abstract class BaseEndpoint
         $result = $this->client->performHttpCall(self::REST_LIST, $apiPath);
 
         /** @var PaginationLinks $links */
-        $links = LinksResourceFactory::createResourceFromApiResult($result->_links, new PaginationLinks());
+        $links = LinksResourceFactory::createResourceFromApiResult($result->links, new PaginationLinks());
 
         $collection = $this->getResourcePageObject($result->count, $links);
 
-        foreach ($result->_embedded->{$collection->getCollectionResourceName()} as $dataResult) {
+        foreach ($result->data as $dataResult) {
             $collection[] = ResourceFactory::createResourceFromApiResult(
                 $dataResult,
                 $this->getResourceObject()

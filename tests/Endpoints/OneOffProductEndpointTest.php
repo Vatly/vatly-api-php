@@ -21,7 +21,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
                 'value' => '10.00',
                 'currency' => 'EUR',
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL. '/one-off-products/' . $productId,
                     'type' => 'application/hal+json',
@@ -41,8 +41,8 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $this->assertEquals('10.00', $product->basePrice->value);
         $this->assertEquals('EUR', $product->basePrice->currency);
 
-        $this->assertEquals(self::API_ENDPOINT_URL. '/one-off-products/' . $productId, $product->_links->self->href);
-        $this->assertEquals('application/hal+json', $product->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL. '/one-off-products/' . $productId, $product->links->self->href);
+        $this->assertEquals('application/hal+json', $product->links->self->type);
     }
 
     /** @test */
@@ -50,19 +50,17 @@ class OneOffProductEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 2,
-            '_embedded' => [
-                'one_off_products' => [
-                    [
-                        'id' => 'one_off_product_123',
-                        'resource' => 'one_off_product',
-                    ],
-                    [
-                        'id' => 'one_off_product_456',
-                        'resource' => 'one_off_product',
-                    ],
+            'data' => [
+                [
+                    'id' => 'one_off_product_123',
+                    'resource' => 'one_off_product',
+                ],
+                [
+                    'id' => 'one_off_product_456',
+                    'resource' => 'one_off_product',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/one-off-products',
                     'type' => 'application/hal+json',
@@ -92,12 +90,12 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $this->assertEquals('one_off_product_123', $productCollection[0]->id);
         $this->assertEquals('one_off_product_456', $productCollection[1]->id);
 
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products', $productCollection->_links->self->href);
-        $this->assertEquals('application/hal+json', $productCollection->_links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?from=one_off_product_next_dummy_id', $productCollection->_links->next->href);
-        $this->assertEquals('application/hal+json', $productCollection->_links->next->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?to=one_off_product_previous_dummy_id', $productCollection->_links->previous->href);
-        $this->assertEquals('application/hal+json', $productCollection->_links->previous->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products', $productCollection->links->self->href);
+        $this->assertEquals('application/hal+json', $productCollection->links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?from=one_off_product_next_dummy_id', $productCollection->links->next->href);
+        $this->assertEquals('application/hal+json', $productCollection->links->next->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?to=one_off_product_previous_dummy_id', $productCollection->links->previous->href);
+        $this->assertEquals('application/hal+json', $productCollection->links->previous->type);
     }
 
     /** @test */
@@ -105,19 +103,17 @@ class OneOffProductEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 2,
-            '_embedded' => [
-                'one_off_products' => [
-                    [
-                        'id' => 'one_off_product_123',
-                        'resource' => 'one_off_product',
-                    ],
-                    [
-                        'id' => 'one_off_product_456',
-                        'resource' => 'one_off_product',
-                    ],
+            'data' => [
+                [
+                    'id' => 'one_off_product_123',
+                    'resource' => 'one_off_product',
+                ],
+                [
+                    'id' => 'one_off_product_456',
+                    'resource' => 'one_off_product',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL . '/one-off-products',
                     'type' => 'application/hal+json',
@@ -136,15 +132,13 @@ class OneOffProductEndpointTest extends BaseEndpointTest
 
         $nextResponseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'one_off_products' => [
-                    [
-                        'id' => 'one_off_product_789',
-                        'resource' => 'one_off_product',
-                    ],
+            'data' => [
+                [
+                    'id' => 'one_off_product_789',
+                    'resource' => 'one_off_product',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL . '/one-off-products?from=one_off_product_next_dummy_id',
                     'type' => 'application/hal+json',

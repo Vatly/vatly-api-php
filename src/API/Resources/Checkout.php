@@ -47,7 +47,7 @@ class Checkout extends BaseResource
      */
     public $metadata = null;
 
-    public CheckoutLinks $_links;
+    public CheckoutLinks $links;
 
     /* @see CheckoutStatus */
     public string $status;

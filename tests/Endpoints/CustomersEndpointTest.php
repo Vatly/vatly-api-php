@@ -29,7 +29,7 @@ class CustomersEndpointTest extends BaseEndpointTest
             'metadata' => [
                 'customer_id' => '123456',
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18',
                     'type' => 'application/hal+json',
@@ -78,8 +78,8 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals('2020-01-01T00:00:00+00:00', $customer->createdAt);
         $this->assertTrue($customer->testmode);
         $this->assertEquals(['customer_id' => '123456'], (array) $customer->metadata);
-        $this->assertEquals(self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer->_links->self->href);
-        $this->assertEquals('application/hal+json', $customer->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer->links->self->href);
+        $this->assertEquals('application/hal+json', $customer->links->self->type);
     }
 
     /** @test */
@@ -91,7 +91,7 @@ class CustomersEndpointTest extends BaseEndpointTest
             'name' => 'Test customer',
             'createdAt' => '2020-01-01T00:00:00+00:00',
             'testmode' => true,
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18',
                     'type' => 'application/hal+json',
@@ -118,8 +118,8 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals('Test customer', $customer->name);
         $this->assertEquals('2020-01-01T00:00:00+00:00', $customer->createdAt);
         $this->assertTrue($customer->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer->_links->self->href);
-        $this->assertEquals('application/hal+json', $customer->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL. '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer->links->self->href);
+        $this->assertEquals('application/hal+json', $customer->links->self->type);
         $this->assertNull($customer->streetAndNumber);
         $this->assertNull($customer->streetAdditional);
         $this->assertNull($customer->postalCode);
@@ -153,7 +153,7 @@ class CustomersEndpointTest extends BaseEndpointTest
             'metadata' => [
                 'customer_id' => '123456',
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18',
                     'type' => 'application/hal+json',
@@ -177,51 +177,49 @@ class CustomersEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 2,
-            '_embedded' => [
-                'customers' => [
-                    [
-                        'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d18',
-                        'resource' => 'customer',
-                        'name' => 'Test customer',
-                        'streetAndNumber' => 'Test street 1',
-                        'streetAdditional' => 'Test street 2',
-                        'postalCode' => '12345',
-                        'city' => 'Test city',
-                        'country' => 'DE',
-                        'companyName' => 'Test company',
-                        'vatNumber' => 'DE123456789',
-                        'email' => 'testcustomer@dummy.com',
-                        'locale' => 'de_DE',
-                        'createdAt' => '2020-01-01T00:00:00+00:00',
-                        'testmode' => true,
-                        'metadata' => [
-                            'customer_id' => '123456',
-                        ],
-                        '_links' => [
-                            'self' => [
-                                'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18',
-                                'type' => 'application/hal+json',
-                            ],
+            'data' => [
+                [
+                    'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d18',
+                    'resource' => 'customer',
+                    'name' => 'Test customer',
+                    'streetAndNumber' => 'Test street 1',
+                    'streetAdditional' => 'Test street 2',
+                    'postalCode' => '12345',
+                    'city' => 'Test city',
+                    'country' => 'DE',
+                    'companyName' => 'Test company',
+                    'vatNumber' => 'DE123456789',
+                    'email' => 'testcustomer@dummy.com',
+                    'locale' => 'de_DE',
+                    'createdAt' => '2020-01-01T00:00:00+00:00',
+                    'testmode' => true,
+                    'metadata' => [
+                        'customer_id' => '123456',
+                    ],
+                    'links' => [
+                        'self' => [
+                            'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18',
+                            'type' => 'application/hal+json',
                         ],
                     ],
-                    [
-                        'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d19',
-                        'resource' => 'customer',
-                        'name' => 'Test customer 2',
-                        'email' => 'johndoe@example.com',
-                        'createdAt' => '2020-01-01T00:00:00+00:00',
-                        'testmode' => true,
-                        'metadata' => null,
-                        '_links' => [
-                            'self' => [
-                                'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19',
-                                'type' => 'application/hal+json',
-                            ],
+                ],
+                [
+                    'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d19',
+                    'resource' => 'customer',
+                    'name' => 'Test customer 2',
+                    'email' => 'johndoe@example.com',
+                    'createdAt' => '2020-01-01T00:00:00+00:00',
+                    'testmode' => true,
+                    'metadata' => null,
+                    'links' => [
+                        'self' => [
+                            'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19',
+                            'type' => 'application/hal+json',
                         ],
                     ],
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL . '/customers',
                     'type' => 'application/hal+json',
@@ -244,8 +242,8 @@ class CustomersEndpointTest extends BaseEndpointTest
         $customers = $this->client->customers->page();
 
         $this->assertEquals(2, $customers->count);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers', $customers->_links->self->href);
-        $this->assertEquals('application/hal+json', $customers->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers', $customers->links->self->href);
+        $this->assertEquals('application/hal+json', $customers->links->self->type);
 
         $customer1 = $customers[0];
         $this->assertEquals('customer_78b146a7de7d417e9d68d7e6ef193d18', $customer1->id);
@@ -259,10 +257,10 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals('Test customer 2', $customer2->name);
         $this->assertEquals('johndoe@example.com', $customer2->email);
 
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer1->_links->self->href);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer2->_links->self->href);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d19', $customers->_links->next->href);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_previous_id', $customers->_links->previous->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer1->links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer2->links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d19', $customers->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_previous_id', $customers->links->previous->href);
     }
 
     /** @test */
@@ -270,15 +268,13 @@ class CustomersEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'customers' => [
-                    [
-                        'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d18',
-                        'resource' => 'customer',
-                    ],
+            'data' => [
+                [
+                    'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d18',
+                    'resource' => 'customer',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL . '/customers',
                     'type' => 'application/hal+json',
@@ -301,26 +297,24 @@ class CustomersEndpointTest extends BaseEndpointTest
 
         $nextResponseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'customers' => [
-                    [
-                        'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d19',
-                        'resource' => 'customer',
-                        'name' => 'Test customer 2',
-                        'email' => 'me@me.com',
-                        'createdAt' => '2020-01-01T00:00:00+00:00',
-                        'testmode' => true,
-                        'metadata' => null,
-                        '_links' => [
-                            'self' => [
-                                'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19',
-                                'type' => 'application/hal+json',
-                            ],
+            'data' => [
+                [
+                    'id' => 'customer_78b146a7de7d417e9d68d7e6ef193d19',
+                    'resource' => 'customer',
+                    'name' => 'Test customer 2',
+                    'email' => 'me@me.com',
+                    'createdAt' => '2020-01-01T00:00:00+00:00',
+                    'testmode' => true,
+                    'metadata' => null,
+                    'links' => [
+                        'self' => [
+                            'href' => self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19',
+                            'type' => 'application/hal+json',
                         ],
                     ],
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18',
                     'type' => 'application/hal+json',
@@ -348,8 +342,8 @@ class CustomersEndpointTest extends BaseEndpointTest
         $customer = $nextCustomers[0];
 
         $this->assertEquals(1, $nextCustomers->count);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18', $nextCustomers->_links->self->href);
-        $this->assertEquals('application/hal+json', $nextCustomers->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?from=customer_78b146a7de7d417e9d68d7e6ef193d18', $nextCustomers->links->self->href);
+        $this->assertEquals('application/hal+json', $nextCustomers->links->self->type);
         $this->assertNull($nextCustomers->next());
 
         $this->assertEquals('customer_78b146a7de7d417e9d68d7e6ef193d19', $customer->id);
@@ -359,7 +353,7 @@ class CustomersEndpointTest extends BaseEndpointTest
         $this->assertEquals('2020-01-01T00:00:00+00:00', $customer->createdAt);
         $this->assertTrue($customer->testmode);
         $this->assertEquals(null, $customer->metadata);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer->_links->self->href);
-        $this->assertEquals('application/hal+json', $customer->_links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer->links->self->href);
+        $this->assertEquals('application/hal+json', $customer->links->self->type);
     }
 }

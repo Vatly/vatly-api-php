@@ -211,8 +211,8 @@ class CurlHttpClient implements HttpClientInterface
                 $field = $body->field;
             }
 
-            if (isset($body->_links, $body->_links->documentation)) {
-                $message .= ". Documentation: {$body->_links->documentation->href}";
+            if (isset($body->links, $body->links->documentation)) {
+                $message .= ". Documentation: {$body->links->documentation->href}";
             }
 
             if ($httpBody) {

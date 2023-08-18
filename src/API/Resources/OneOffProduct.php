@@ -26,5 +26,5 @@ class OneOffProduct extends BaseResource
      */
     public Money $basePrice;
 
-    public OneOffProductLinks $_links;
+    public OneOffProductLinks $links;
 }

@@ -21,25 +21,25 @@ abstract class BaseResourcePage extends ArrayObject
     /**
      * @var PaginationLinks|null
      */
-    public $_links;
+    public $links;
 
     /**
      * @var BaseResource[]
      */
-    public array $_embedded;
+    public array $data;
 
     protected VatlyApiClient $apiClient;
 
     /**
      * @param VatlyApiClient $apiClient
      * @param int $count
-     * @param PaginationLinks|null $_links
+     * @param PaginationLinks|null $links
      */
-    final public function __construct(VatlyApiClient $apiClient, $count, $_links)
+    final public function __construct(VatlyApiClient $apiClient, $count, $links)
     {
         $this->apiClient = $apiClient;
         $this->count = $count;
-        $this->_links = $_links;
+        $this->links = $links;
         parent::__construct();
     }
 
@@ -65,11 +65,11 @@ abstract class BaseResourcePage extends ArrayObject
             return null;
         }
 
-        $result = $this->apiClient->performHttpCallToFullUrl(VatlyApiClient::HTTP_GET, $this->_links->next->href);
+        $result = $this->apiClient->performHttpCallToFullUrl(VatlyApiClient::HTTP_GET, $this->links->next->href);
 
-        $collection = new static($this->apiClient, $result->count, $result->_links);
+        $collection = new static($this->apiClient, $result->count, $result->links);
 
-        foreach ($result->_embedded->{$collection->getCollectionResourceName()} as $dataResult) {
+        foreach ($result->data as $dataResult) {
             $collection[] = ResourceFactory::createResourceFromApiResult($dataResult, $this->createResourceObject());
         }
 
@@ -88,11 +88,11 @@ abstract class BaseResourcePage extends ArrayObject
             return null;
         }
 
-        $result = $this->apiClient->performHttpCallToFullUrl(VatlyApiClient::HTTP_GET, $this->_links->previous->href);
+        $result = $this->apiClient->performHttpCallToFullUrl(VatlyApiClient::HTTP_GET, $this->links->previous->href);
 
-        $collection = new static($this->apiClient, $result->count, $result->_links);
+        $collection = new static($this->apiClient, $result->count, $result->links);
 
-        foreach ($result->_embedded->{$collection->getCollectionResourceName()} as $dataResult) {
+        foreach ($result->data as $dataResult) {
             $collection[] = ResourceFactory::createResourceFromApiResult($dataResult, $this->createResourceObject());
         }
 
@@ -106,7 +106,7 @@ abstract class BaseResourcePage extends ArrayObject
      */
     public function hasNext(): bool
     {
-        return isset($this->_links->next, $this->_links->next->href);
+        return isset($this->links->next, $this->links->next->href);
     }
 
     /**
@@ -116,6 +116,6 @@ abstract class BaseResourcePage extends ArrayObject
      */
     public function hasPrevious(): bool
     {
-        return isset($this->_links->previous, $this->_links->previous->href);
+        return isset($this->links->previous, $this->links->previous->href);
     }
 }

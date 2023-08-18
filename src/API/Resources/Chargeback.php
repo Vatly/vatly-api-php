@@ -35,8 +35,7 @@ class Chargeback extends BaseResource
 
     public string $reason;
 
-
-    public ChargebackLinks $_links;
+    public ChargebackLinks $links;
 
     /**
      * The associated order ID

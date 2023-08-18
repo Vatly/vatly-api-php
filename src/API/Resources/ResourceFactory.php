@@ -27,9 +27,9 @@ class ResourceFactory
     {
         foreach ($apiResult as $property => $value) {
             switch ($property) {
-                case '_links':
+                case 'links':
                     try {
-                        $rp = new ReflectionProperty(get_class($resource), '_links');
+                        $rp = new ReflectionProperty(get_class($resource), 'links');
                         $rpType = $rp->getType();
                         if ($rpType instanceof ReflectionNamedType) {
                             $linksClass = $rpType->getName();
@@ -77,7 +77,7 @@ class ResourceFactory
      * @param \Vatly\API\VatlyApiClient $client
      * @param array $input
      * @param string $resourceClass
-     * @param object|null $_links
+     * @param object|null $links
      * @param string|null $resourcePageClass
      * @return mixed
      */
@@ -85,14 +85,14 @@ class ResourceFactory
         VatlyApiClient $client,
         array $input,
         string $resourceClass,
-        ?object $_links = null,
+        ?object $links = null,
         ?string $resourcePageClass = null
     ) {
         if (null === $resourcePageClass) {
             $resourcePageClass = $resourceClass.'Collection';
         }
 
-        $data = new $resourcePageClass($client, count($input), $_links);
+        $data = new $resourcePageClass($client, count($input), $links);
         foreach ($input as $item) {
             $data[] = static::createResourceFromApiResult($item, new $resourceClass($client));
         }

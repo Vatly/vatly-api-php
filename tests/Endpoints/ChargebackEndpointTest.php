@@ -31,7 +31,7 @@ class ChargebackEndpointTest extends BaseEndpointTest
             'createdAt' => '2020-01-01',
             'orderId' => 'order_dummy_id',
             'originalOrderId' => 'original_order_dummy_id',
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/chargebacks/'.$chargebackId,
                     'type' => 'application/hal+json',
@@ -50,7 +50,7 @@ class ChargebackEndpointTest extends BaseEndpointTest
         $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
 
         /** @var Chargeback $chargeback */
-        $chargeback = $this->client->chargebacks->get($chargebackId, []);
+        $chargeback = $this->client->chargebacks->get($chargebackId);
 
         $this->assertInstanceOf(Chargeback::class, $chargeback);
         $this->assertEquals('chargeback', $chargeback->resource);
@@ -65,9 +65,9 @@ class ChargebackEndpointTest extends BaseEndpointTest
         $this->assertEquals('reason', $chargeback->reason);
         $this->assertEquals('order_dummy_id', $chargeback->orderId);
         $this->assertEquals('original_order_dummy_id', $chargeback->originalOrderId);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks/'.$chargebackId, $chargeback->_links->self->href);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/order_dummy_id', $chargeback->_links->order->href);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/original_order_dummy_id', $chargeback->_links->originalOrder->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks/'.$chargebackId, $chargeback->links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/order_dummy_id', $chargeback->links->order->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/original_order_dummy_id', $chargeback->links->originalOrder->href);
     }
 
     /** @test */
@@ -75,19 +75,17 @@ class ChargebackEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 2,
-            '_embedded' => [
-                'chargebacks' => [
-                    [
-                        'id' => 'chargeback_123',
-                        'resource' => 'chargeback',
-                    ],
-                    [
-                        'id' => 'chargeback_456',
-                        'resource' => 'chargeback',
-                    ],
+            'data' => [
+                [
+                    'id' => 'chargeback_123',
+                    'resource' => 'chargeback',
+                ],
+                [
+                    'id' => 'chargeback_456',
+                    'resource' => 'chargeback',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/chargebacks',
                     'type' => 'application/hal+json',
@@ -114,11 +112,11 @@ class ChargebackEndpointTest extends BaseEndpointTest
         $this->assertEquals('chargeback_123', $chargebackCollection[0]->id);
         $this->assertEquals('chargeback_456', $chargebackCollection[1]->id);
 
-        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks', $chargebackCollection->_links->self->href);
-        $this->assertEquals('application/hal+json', $chargebackCollection->_links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id', $chargebackCollection->_links->next->href);
-        $this->assertEquals('application/hal+json', $chargebackCollection->_links->next->type);
-        $this->assertNull($chargebackCollection->_links->previous);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks', $chargebackCollection->links->self->href);
+        $this->assertEquals('application/hal+json', $chargebackCollection->links->self->type);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id', $chargebackCollection->links->next->href);
+        $this->assertEquals('application/hal+json', $chargebackCollection->links->next->type);
+        $this->assertNull($chargebackCollection->links->previous);
 
         $this->assertNull($chargebackCollection->previous());
     }
@@ -128,15 +126,13 @@ class ChargebackEndpointTest extends BaseEndpointTest
     {
         $responseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'chargebacks' => [
-                    [
-                        'id' => 'chargeback_123',
-                        'resource' => 'chargeback',
-                    ],
+            'data' => [
+                [
+                    'id' => 'chargeback_123',
+                    'resource' => 'chargeback',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
                     'type' => 'application/hal+json',
@@ -155,15 +151,13 @@ class ChargebackEndpointTest extends BaseEndpointTest
 
         $previousResponseBodyArray = [
             'count' => 1,
-            '_embedded' => [
-                'chargebacks' => [
-                    [
-                        'id' => 'chargeback_456',
-                        'resource' => 'chargeback',
-                    ],
+            'data' => [
+                [
+                    'id' => 'chargeback_456',
+                    'resource' => 'chargeback',
                 ],
             ],
-            '_links' => [
+            'links' => [
                 'self' => [
                     'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_previous_dummy_id',
                     'type' => 'application/hal+json',
