@@ -51,14 +51,8 @@ class OneOffProductEndpointTest extends BaseEndpointTest
         $responseBodyArray = [
             'count' => 2,
             'data' => [
-                [
-                    'id' => 'one_off_product_123',
-                    'resource' => 'one_off_product',
-                ],
-                [
-                    'id' => 'one_off_product_456',
-                    'resource' => 'one_off_product',
-                ],
+                ['id' => 'one_off_product_123', 'resource' => 'one_off_product'],
+                ['id' => 'one_off_product_456', 'resource' => 'one_off_product'],
             ],
             'links' => [
                 'self' => [
@@ -66,11 +60,11 @@ class OneOffProductEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/one-off-products?from=one_off_product_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/one-off-products?starting_after=one_off_product_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => [
-                    'href' => self::API_ENDPOINT_URL.'/one-off-products?to=one_off_product_previous_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/one-off-products?ending_before=one_off_product_previous_dummy_id',
                     'type' => 'application/hal+json',
                 ],
             ],
@@ -92,66 +86,56 @@ class OneOffProductEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products', $productCollection->links->self->href);
         $this->assertEquals('application/hal+json', $productCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?from=one_off_product_next_dummy_id', $productCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?starting_after=one_off_product_next_dummy_id', $productCollection->links->next->href);
         $this->assertEquals('application/hal+json', $productCollection->links->next->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?to=one_off_product_previous_dummy_id', $productCollection->links->previous->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?ending_before=one_off_product_previous_dummy_id', $productCollection->links->previous->href);
         $this->assertEquals('application/hal+json', $productCollection->links->previous->type);
     }
 
     /** @test */
     public function can_get_next_page_of_one_off_products()
     {
-        $responseBodyArray = [
-            'count' => 2,
-            'data' => [
-                [
-                    'id' => 'one_off_product_123',
-                    'resource' => 'one_off_product',
+        $responseBodyArrayCollection = [
+            [
+                'count' => 2,
+                'data' => [
+                    ['id' => 'one_off_product_123', 'resource' => 'one_off_product',],
+                    ['id' => 'one_off_product_456', 'resource' => 'one_off_product',],
                 ],
-                [
-                    'id' => 'one_off_product_456',
-                    'resource' => 'one_off_product',
+                'links' => [
+                    'self' => [
+                        'href' => self::API_ENDPOINT_URL . '/one-off-products',
+                        'type' => 'application/hal+json',
+                    ],
+                    'next' => [
+                        'href' => self::API_ENDPOINT_URL . '/one-off-products?starting_after=one_off_product_next_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'previous' => null,
                 ],
             ],
-            'links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL . '/one-off-products',
-                    'type' => 'application/hal+json',
+            [
+                'count' => 1,
+                'data' => [
+                    ['id' => 'one_off_product_789', 'resource' => 'one_off_product',],
                 ],
-                'next' => [
-                    'href' => self::API_ENDPOINT_URL . '/one-off-products?from=one_off_product_next_dummy_id',
-                    'type' => 'application/hal+json',
+                'links' => [
+                    'self' => [
+                        'href' => self::API_ENDPOINT_URL . '/one-off-products?starting_after=one_off_product_next_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'next' => null,
+                    'previous' => [
+                        'href' => self::API_ENDPOINT_URL . '/one-off-products',
+                        'type' => 'application/hal+json',
+                    ],
                 ],
-                'previous' => null,
             ],
         ];
 
-        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+        $this->httpClient->setSendReturnCollectionFromArray($responseBodyArrayCollection);
 
         $productCollection = $this->client->oneOffProducts->page();
-
-        $nextResponseBodyArray = [
-            'count' => 1,
-            'data' => [
-                [
-                    'id' => 'one_off_product_789',
-                    'resource' => 'one_off_product',
-                ],
-            ],
-            'links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL . '/one-off-products?from=one_off_product_next_dummy_id',
-                    'type' => 'application/hal+json',
-                ],
-                'next' => null,
-                'previous' => [
-                    'href' => self::API_ENDPOINT_URL . '/one-off-products',
-                    'type' => 'application/hal+json',
-                ],
-            ],
-        ];
-
-        $this->httpClient->setSendReturnObjectFromArray($nextResponseBodyArray);
 
         $nextProductCollection = $productCollection->next();
 

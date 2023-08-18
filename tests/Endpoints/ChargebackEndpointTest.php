@@ -76,14 +76,8 @@ class ChargebackEndpointTest extends BaseEndpointTest
         $responseBodyArray = [
             'count' => 2,
             'data' => [
-                [
-                    'id' => 'chargeback_123',
-                    'resource' => 'chargeback',
-                ],
-                [
-                    'id' => 'chargeback_456',
-                    'resource' => 'chargeback',
-                ],
+                ['id' => 'chargeback_123', 'resource' => 'chargeback'],
+                ['id' => 'chargeback_456', 'resource' => 'chargeback'],
             ],
             'links' => [
                 'self' => [
@@ -91,7 +85,7 @@ class ChargebackEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
@@ -114,7 +108,7 @@ class ChargebackEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks', $chargebackCollection->links->self->href);
         $this->assertEquals('application/hal+json', $chargebackCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id', $chargebackCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_next_dummy_id', $chargebackCollection->links->next->href);
         $this->assertEquals('application/hal+json', $chargebackCollection->links->next->type);
         $this->assertNull($chargebackCollection->links->previous);
 
@@ -124,56 +118,49 @@ class ChargebackEndpointTest extends BaseEndpointTest
     /** @test */
     public function can_get_previous_page(): void
     {
-        $responseBodyArray = [
-            'count' => 1,
-            'data' => [
-                [
-                    'id' => 'chargeback_123',
-                    'resource' => 'chargeback',
+        $responseBodyArrayCollection = [
+            [
+                'count' => 1,
+                'data' => [
+                    ['id' => 'chargeback_123', 'resource' => 'chargeback'],
+                ],
+                'links' => [
+                    'self' => [
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_next_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'next' => null,
+                    'previous' => [
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?ending_before=chargeback_previous_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
                 ],
             ],
-            'links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
-                    'type' => 'application/hal+json',
+            [
+                'count' => 1,
+                'data' => [
+                    ['id' => 'chargeback_456', 'resource' => 'chargeback',],
                 ],
-                'next' => null,
-                'previous' => [
-                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_previous_dummy_id',
-                    'type' => 'application/hal+json',
+                'links' => [
+                    'self' => [
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_previous_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'next' => [
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_next_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'previous' => [
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks',
+                        'type' => 'application/hal+json',
+                    ],
                 ],
             ],
         ];
 
-        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+        $this->httpClient->setSendReturnCollectionFromArray($responseBodyArrayCollection);
 
         $chargebackCollection = $this->client->chargebacks->page();
-
-        $previousResponseBodyArray = [
-            'count' => 1,
-            'data' => [
-                [
-                    'id' => 'chargeback_456',
-                    'resource' => 'chargeback',
-                ],
-            ],
-            'links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_previous_dummy_id',
-                    'type' => 'application/hal+json',
-                ],
-                'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/chargebacks?from=chargeback_next_dummy_id',
-                    'type' => 'application/hal+json',
-                ],
-                'previous' => [
-                    'href' => self::API_ENDPOINT_URL.'/chargebacks',
-                    'type' => 'application/hal+json',
-                ],
-            ],
-        ];
-
-        $this->httpClient->setSendReturnObjectFromArray($previousResponseBodyArray);
 
         $previousChargebackCollection = $chargebackCollection->previous();
 
