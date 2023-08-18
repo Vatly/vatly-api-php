@@ -118,4 +118,23 @@ abstract class BaseResourcePage extends ArrayObject
     {
         return isset($this->links->previous, $this->links->previous->href);
     }
+
+    private function pointsToNextItems(): bool
+    {
+        return ! str_contains($this->links->self->href, 'ending_before');
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function autoPagingIterator(): \Generator
+    {
+        $page = $this;
+        $goToNextPage = $this->pointsToNextItems();
+        do {
+            foreach ($page as $item) {
+                yield $item;
+            }
+        } while ($page = $goToNextPage ? $page->next() : $page->previous());
+    }
 }
