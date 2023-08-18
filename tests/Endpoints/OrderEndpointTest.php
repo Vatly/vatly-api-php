@@ -68,17 +68,6 @@ class OrderEndpointTest extends BaseEndpointTest
                     ],
                     "taxName" => "VAT",
                     "taxPercentage" => "20.00",
-                    'links' => [
-                        'self' => [
-                            'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId.'/line/order_item_2a46f4c01d3b47979f4d7b3f58c98be7',
-                            'type' => 'application/hal+json',
-                        ],
-                        'order' => [
-                            'href' => self::API_ENDPOINT_URL.'/orders/'.$orderId,
-                            'type' => 'application/hal+json',
-                        ],
-                    ],
-
                 ],
             ],
             'merchantDetails' => [
@@ -111,11 +100,11 @@ class OrderEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'customer' => [
-                    'href' => self::API_ENDPOINT_URL.'/customer/customer_123',
+                    'href' => self::API_ENDPOINT_URL.'/customers/customer_123',
                     'type' => 'application/hal+json',
                 ],
                 'invoice' => [
-                    'href' => self::API_ENDPOINT_URL.'/invoice/invoice_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/invoices/invoice_dummy_id',
                     'type' => 'application/pdf',
                 ],
             ],
@@ -145,9 +134,9 @@ class OrderEndpointTest extends BaseEndpointTest
 
         $this->assertEquals('https://api.vatly.com/v1/orders/order_dummy_id', $order->links->self->href);
         $this->assertEquals('application/hal+json', $order->links->self->type);
-        $this->assertEquals('https://api.vatly.com/v1/customer/customer_123', $order->links->customer->href);
+        $this->assertEquals('https://api.vatly.com/v1/customers/customer_123', $order->links->customer->href);
         $this->assertEquals('application/hal+json', $order->links->customer->type);
-        $this->assertEquals('https://api.vatly.com/v1/invoice/invoice_dummy_id', $order->links->invoice->href);
+        $this->assertEquals('https://api.vatly.com/v1/invoices/invoice_dummy_id', $order->links->invoice->href);
         $this->assertEquals('application/pdf', $order->links->invoice->type);
 
 

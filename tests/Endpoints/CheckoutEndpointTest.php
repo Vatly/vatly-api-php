@@ -27,7 +27,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
             ],
             'links' => [
                 'checkoutUrl' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                    'href' => self::WEBSITE_ENDPOINT_URL.'/checkout/checkout_dummy_id',
                     'type' => 'text/html',
                 ],
                 'self' => [
@@ -73,7 +73,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
         $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
         $this->assertTrue($checkout->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
+        $this->assertEquals(self::WEBSITE_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->links->self->href);
         $this->assertEquals($responseBodyArray['metadata'], (array) $checkout->metadata);
 
@@ -125,20 +125,17 @@ class CheckoutEndpointTest extends BaseEndpointTest
             'status' => CheckoutStatus::STATUS_PAID,
             'links' => [
                 'checkoutUrl' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                    'href' => self::WEBSITE_ENDPOINT_URL.'/checkout/checkout_dummy_id',
                     'type' => 'text/html',
                 ],
                 'self' => [
                    'href' => self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id',
                    'type' => 'application/hal+json',
                 ],
-            ],
-            'webhookUrls' => [
-                'paid' => 'https://your-website.com/webhooks/vatlify/order/123/paid',
-                'canceled' => 'https://your-website.com/webhooks/vatlify/order/123/canceled',
-                'refundCompleted' => 'https://your-website.com/webhooks/vatlify/order/123/refund-completed',
-                'refundCanceled' => 'https://your-website.com/webhooks/vatlify/order/123/refund-canceled',
-                'refundFailed' => 'https://your-website.com/webhooks/vatlify/order/123/refund-failed',
+                'order' => [
+                    'href' => self::API_ENDPOINT_URL.'/orders/order_123',
+                    'type' => 'application/hal+json',
+                ],
             ],
         ];
 
@@ -155,8 +152,9 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
         $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
         $this->assertTrue($checkout->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
+        $this->assertEquals(self::WEBSITE_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/order_123', $checkout->links->order->href);
         $this->assertEquals($responseBodyArray['metadata'],  (array) $checkout->metadata);
     }
 
@@ -177,7 +175,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
                     'status' => CheckoutStatus::STATUS_PENDING,
                     'links' => [
                         'checkoutUrl' => [
-                            'href' => self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id',
+                            'href' => self::WEBSITE_ENDPOINT_URL.'/checkout/checkout_dummy_id',
                             'type' => 'text/html',
                         ],
                         'self' => [
@@ -185,7 +183,6 @@ class CheckoutEndpointTest extends BaseEndpointTest
                             'type' => 'application/hal+json',
                         ],
                     ],
-                    'webhookUrls' => [],
                 ],
             ],
             'links' => [
@@ -221,7 +218,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
         $this->assertEquals("https://www.sandorian.com/success", $checkout->redirectUrlSuccess);
         $this->assertEquals("https://www.sandorian.com/canceled", $checkout->redirectUrlCanceled);
         $this->assertTrue($checkout->testmode);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
+        $this->assertEquals(self::WEBSITE_ENDPOINT_URL.'/checkout/checkout_dummy_id', $checkout->links->checkoutUrl->href);
         $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts/checkout_dummy_id', $checkout->links->self->href);
     }
 
