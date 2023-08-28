@@ -12,12 +12,19 @@ class SpyHttpClient implements HttpClientInterface
     protected ?object $sendReturn;
     protected array $recordedSends = [];
 
+    protected array $sendReturnCollection = [];
+
     public function send(
         string $httpMethod,
         string $url,
         array $headers,
         ?string $httpBody
     ): ?object {
+        // If we have a collection of send returns, use the first one and remove it from the collection
+        if (count($this->sendReturnCollection) > 0) {
+            $this->sendReturn = array_shift($this->sendReturnCollection);
+        }
+
         $this->recordSend($httpMethod, $url, $headers, $httpBody);
 
         return $this->sendReturn;
@@ -46,6 +53,32 @@ class SpyHttpClient implements HttpClientInterface
     {
         return $this->setSendReturnObject(json_decode(json_encode($value)));
     }
+
+    public function setSendReturnCollection(array $value): self
+    {
+        foreach ($value as $item) {
+            if (! is_object($item)) {
+                ray($item);
+
+                throw new \InvalidArgumentException('Value must be an object or array.');
+            }
+        }
+
+        $this->sendReturnCollection = $value;
+
+        return $this;
+    }
+
+    public function setSendReturnCollectionFromArray(array $value): self
+    {
+        $items = array_map(function ($item) {
+            return json_decode(json_encode($item));
+        }, $value);
+
+        return $this->setSendReturnCollection($items);
+    }
+
+
 
     public function setSendReturnObjectFromString(string $value): self
     {

@@ -191,7 +191,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/checkouts?starting_after=checkout_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
@@ -205,7 +205,7 @@ class CheckoutEndpointTest extends BaseEndpointTest
 
         $this->assertInstanceOf(CheckoutCollection::class, $checkoutCollection);
         $this->assertNull($checkoutCollection->links->previous);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id', $checkoutCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/checkouts?starting_after=checkout_next_dummy_id', $checkoutCollection->links->next->href);
         $this->assertEquals(1, $checkoutCollection->count);
 
         $checkout = $checkoutCollection[0];
@@ -225,65 +225,61 @@ class CheckoutEndpointTest extends BaseEndpointTest
     /** @test */
     public function cat_get_to_next_page(): void
     {
-        $responseBodyArray = [
-            'count' => 1,
-            'data' => [
-                [
-                    'id' => "checkout_dummy_id",
-                    'resource' => 'checkout',
+        $responseBodyArrayCollection = [
+            [
+                'count' => 1,
+                'data' => [
+                    ['id' => "checkout_dummy_id", 'resource' => 'checkout'],
                 ],
-            ],
-            'links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkouts',
-                    'type' => 'application/hal+json',
+                'links' => [
+                    'self' => [
+                        'href' => self::API_ENDPOINT_URL.'/checkouts',
+                        'type' => 'application/hal+json',
+                    ],
+                    'next' => [
+                        'href' => self::API_ENDPOINT_URL.'/checkouts?starting_after=checkout_next_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'previous' => null,
                 ],
-                'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
-                    'type' => 'application/hal+json',
-                ],
-                'previous' => null,
-            ],
 
+            ],
+            [
+                'count' => 1,
+                'data' => [
+                    [
+                        'id' => "checkout_next_dummy_id",
+                        'resource' => 'checkout',
+                        'merchantId' => 'merchant_123',
+                        'orderId' => 'order_123',
+                        'testmode' => true,
+                    ],
+                ],
+                'links' => [
+                    'self' => [
+                        'href' => self::API_ENDPOINT_URL.'/checkouts?starting_after=checkout_next_dummy_id',
+                        'type' => 'application/hal+json',
+                    ],
+                    'next' => null,
+                    'previous' => [
+                        'href' => self::API_ENDPOINT_URL.'/checkouts',
+                        'type' => 'application/hal+json',
+                    ],
+                ],
+
+            ],
         ];
 
-        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+        $this->httpClient->setSendReturnCollectionFromArray($responseBodyArrayCollection);
 
         $checkoutCollection = $this->client->checkouts->page();
-
-        $nextResponseBodyArray = [
-            'count' => 1,
-            'data' => [
-                [
-                    'id' => "checkout_next_dummy_id",
-                    'resource' => 'checkout',
-                    'merchantId' => 'merchant_123',
-                    'orderId' => 'order_123',
-                    'testmode' => true,
-                ],
-            ],
-            'links' => [
-                'self' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
-                    'type' => 'application/hal+json',
-                ],
-                'next' => null,
-                'previous' => [
-                    'href' => self::API_ENDPOINT_URL.'/checkouts',
-                    'type' => 'application/hal+json',
-                ],
-            ],
-
-        ];
-
-        $this->httpClient->setSendReturnObjectFromArray($nextResponseBodyArray);
 
         /** @var CheckoutCollection $nextCheckoutCollection */
         $nextCheckoutCollection = $checkoutCollection->next();
 
         $this->assertWasSent(
             VatlyApiClient::HTTP_GET,
-            self::API_ENDPOINT_URL.'/checkouts?from=checkout_next_dummy_id',
+            self::API_ENDPOINT_URL.'/checkouts?starting_after=checkout_next_dummy_id',
             [],
             null
         );
