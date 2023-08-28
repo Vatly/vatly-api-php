@@ -75,7 +75,7 @@ class AutoPaginatorTest extends BaseEndpointTest
 
 
         /** @var CustomerCollection $customers */
-        $customers = $this->client->customers->page(null, null, 2);
+        $customers = $this->client->customers->page(limit: 2);
 
         $totalItemsReceived = 0;
 
