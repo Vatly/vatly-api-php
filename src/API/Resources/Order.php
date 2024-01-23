@@ -2,6 +2,7 @@
 
 namespace Vatly\API\Resources;
 
+use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Links\OrderLinks;
 use Vatly\API\Types\Address;
 use Vatly\API\Types\Money;
@@ -138,5 +139,25 @@ class Order extends BaseResource
     public function isPending(): bool
     {
         return $this->status === OrderStatus::STATUS_PENDING;
+    }
+
+    /**
+     * @param array $data
+     * @return BaseResource|Refund
+     * @throws ApiException
+     */
+    public function refund(array $data)
+    {
+        return $this->apiClient->orderRefunds->createForOrderId($this->id, $data);
+    }
+
+    /**
+     * @param array $data
+     * @return BaseResource|Refund
+     * @throws ApiException
+     */
+    public function fullRefund(array $data)
+    {
+        return $this->apiClient->orderRefunds->createFullRefundForOrderId($this->id, $data);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Vatly\API\Resources;
 
+use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Links\RefundLinks;
 use Vatly\API\Types\Money;
 use Vatly\API\Types\RefundStatus;
@@ -77,5 +78,16 @@ class Refund extends BaseResource
             null,
             RefundLineCollection::class,
         );
+    }
+
+    /**
+     * @throws ApiException
+     * @return null
+     */
+    public function cancel()
+    {
+        $this->apiClient->orderRefunds->cancelRefundForOrderId($this->originalOrderId, $this->id);
+
+        return null;
     }
 }

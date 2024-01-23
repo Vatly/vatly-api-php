@@ -49,6 +49,13 @@ class SpyHttpClient implements HttpClientInterface
         return $this;
     }
 
+    public function setSendReturnNull(): self
+    {
+        $this->sendReturn = null;
+
+        return $this;
+    }
+
     public function setSendReturnObjectFromArray(array $value): self
     {
         return $this->setSendReturnObject(json_decode(json_encode($value)));
