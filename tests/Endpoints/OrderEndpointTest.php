@@ -30,18 +30,22 @@ class OrderEndpointTest extends BaseEndpointTest
             'status' => OrderStatus::STATUS_PAID,
             'invoiceNumber' => 'INV 123456',
             'total' => [
-                "value" => "100.00",
+                "value" => "96.00",
                 "currency" => "EUR",
             ],
             'subtotal' => [
                 "value" => "80.00",
                 "currency" => "EUR",
             ],
-            'taxName' => "VAT",
-            'taxPercentage' => '20.00',
-            'taxAmount' => [
-                "value" => "20.00",
-                "currency" => "EUR",
+            'taxes' => [
+                [
+                    'name' => 'VAT',
+                    'percentage' => '20.00',
+                    'amount' => [
+                        'value' => '16.00',
+                        'currency' => 'EUR',
+                    ],
+                ],
             ],
             'lines' => [
                 [
@@ -55,19 +59,23 @@ class OrderEndpointTest extends BaseEndpointTest
                         "currency" => "EUR",
                     ],
                     "total" => [
-                        "value" => "100.00",
-                        "currency" => "EUR",
-                    ],
-                    "taxAmount" => [
-                        "value" => "20.00",
+                        "value" => "96.00",
                         "currency" => "EUR",
                     ],
                     "subtotal" => [
                         "value" => "80.00",
                         "currency" => "EUR",
                     ],
-                    "taxName" => "VAT",
-                    "taxPercentage" => "20.00",
+                    'taxes' => [
+                        [
+                            'name' => 'VAT',
+                            'percentage' => '20.00',
+                            'amount' => [
+                                'value' => '16.00',
+                                'currency' => 'EUR',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'merchantDetails' => [
@@ -123,12 +131,12 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('ideal', $order->paymentMethod);
         $this->assertEquals(OrderStatus::STATUS_PAID, $order->status);
         $this->assertFalse($order->cancelled);
-        $this->assertEquals('100.00', $order->total->value);
+        $this->assertEquals('96.00', $order->total->value);
         $this->assertEquals('80.00', $order->subtotal->value);
-        $this->assertEquals('VAT', $order->taxName);
-        $this->assertEquals('20.00', $order->taxPercentage);
-        $this->assertEquals('20.00', $order->taxAmount->value);
-        $this->assertEquals('EUR', $order->taxAmount->currency);
+        $this->assertEquals('VAT', $order->taxes->taxes[0]->name);
+        $this->assertEquals('20.00', $order->taxes->taxes[0]->percentage);
+        $this->assertEquals('16.00', $order->taxes->taxes[0]->amount->value);
+        $this->assertEquals('EUR', $order->taxes->taxes[0]->amount->currency);
         $this->assertEquals('INV 123456', $order->invoiceNumber);
         $this->assertEquals('2023-01-11T10:50:50+02:00', $order->createdAt);
 
@@ -170,13 +178,13 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertEquals('orderline', $orderLine->resource);
         $this->assertEquals('order_dummy_id', $orderLine->orderId);
         $this->assertEquals('PDF Book', $orderLine->description);
-        $this->assertEquals("100.00", $orderLine->total->value);
+        $this->assertEquals("96.00", $orderLine->total->value);
         $this->assertEquals("80.00", $orderLine->subtotal->value);
         $this->assertEquals("80.00", $orderLine->basePrice->value);
-        $this->assertEquals("VAT", $orderLine->taxName);
-        $this->assertEquals("20.00", $orderLine->taxPercentage);
-        $this->assertEquals("20.00", $orderLine->taxAmount->value);
-        $this->assertEquals("EUR", $orderLine->taxAmount->currency);
+        $this->assertEquals("VAT", $orderLine->taxes->taxes[0]->name);
+        $this->assertEquals("20.00", $orderLine->taxes->taxes[0]->percentage);
+        $this->assertEquals("16.00", $orderLine->taxes->taxes[0]->amount->value);
+        $this->assertEquals("EUR", $orderLine->taxes->taxes[0]->amount->currency);
     }
 
     /** @test */

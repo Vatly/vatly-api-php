@@ -7,6 +7,7 @@ use Vatly\API\Resources\Links\OrderLinks;
 use Vatly\API\Types\Address;
 use Vatly\API\Types\Money;
 use Vatly\API\Types\OrderStatus;
+use Vatly\API\Types\TaxesCollection;
 
 class Order extends BaseResource
 {
@@ -39,19 +40,9 @@ class Order extends BaseResource
 
     public Money $total;
 
-    public Money $taxAmount;
-
     public Money $subtotal;
 
-    /**
-     * @example VAT
-     */
-    public string $taxName;
-
-    /**
-     * @example 21.00
-     */
-    public string $taxPercentage;
+    public TaxesCollection $taxes;
 
     /**
      * @example creditcard

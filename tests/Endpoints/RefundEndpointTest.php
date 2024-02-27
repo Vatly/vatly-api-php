@@ -30,18 +30,22 @@ class RefundEndpointTest extends BaseEndpointTest
             'originalOrderId' => 'original_order_dummy_id',
             'createdAt' => '2023-01-11T10:50:50+02:00',
             'total' => [
-                "value" => "100.00",
+                "value" => "96.00",
                 "currency" => "EUR",
             ],
             'subtotal' => [
                 "value" => "80.00",
                 "currency" => "EUR",
             ],
-            'taxName' => "VAT",
-            'taxPercentage' => '20.00',
-            'taxAmount' => [
-                "value" => "20.00",
-                "currency" => "EUR",
+            'taxes' => [
+                [
+                    'name' => 'VAT',
+                    'percentage' => '20.00',
+                    'amount' => [
+                        'value' => '16.00',
+                        'currency' => 'EUR',
+                    ],
+                ],
             ],
             'lines' => [
                 [
@@ -54,7 +58,7 @@ class RefundEndpointTest extends BaseEndpointTest
                         "currency" => "EUR",
                     ],
                     "total" => [
-                        "value" => "100.00",
+                        "value" => "96.00",
                         "currency" => "EUR",
                     ],
                     "taxAmount" => [
@@ -65,8 +69,16 @@ class RefundEndpointTest extends BaseEndpointTest
                         "value" => "80.00",
                         "currency" => "EUR",
                     ],
-                    "taxName" => "VAT",
-                    "taxPercentage" => "20.00",
+                    'taxes' => [
+                        [
+                            'name' => 'VAT',
+                            'percentage' => '20.00',
+                            'amount' => [
+                                'value' => '16.00',
+                                'currency' => 'EUR',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'links' => [
@@ -104,12 +116,12 @@ class RefundEndpointTest extends BaseEndpointTest
         $this->assertEquals('original_order_dummy_id', $refund->originalOrderId);
         $this->assertFalse($refund->testmode);
         $this->assertEquals(RefundStatus::REFUNDED, $refund->status);
-        $this->assertEquals('100.00', $refund->total->value);
+        $this->assertEquals('96.00', $refund->total->value);
         $this->assertEquals('80.00', $refund->subtotal->value);
-        $this->assertEquals('VAT', $refund->taxName);
-        $this->assertEquals('20.00', $refund->taxPercentage);
-        $this->assertEquals('20.00', $refund->taxAmount->value);
-        $this->assertEquals('EUR', $refund->taxAmount->currency);
+        $this->assertEquals('VAT', $refund->taxes->taxes[0]->name);
+        $this->assertEquals('20.00', $refund->taxes->taxes[0]->percentage);
+        $this->assertEquals('16.00', $refund->taxes->taxes[0]->amount->value);
+        $this->assertEquals('EUR', $refund->taxes->taxes[0]->amount->currency);
         $this->assertEquals('2023-01-11T10:50:50+02:00', $refund->createdAt);
 
         $this->assertEquals('https://api.vatly.com/v1/refunds/refund_dummy_id', $refund->links->self->href);
@@ -126,13 +138,13 @@ class RefundEndpointTest extends BaseEndpointTest
         $this->assertEquals('refund_item_2a46f4c01d3b47979f4d7b3f58c98be7', $refundLine->id);
         $this->assertEquals('refundline', $refundLine->resource);
         $this->assertEquals('PDF Book', $refundLine->description);
-        $this->assertEquals("100.00", $refundLine->total->value);
+        $this->assertEquals("96.00", $refundLine->total->value);
         $this->assertEquals("80.00", $refundLine->subtotal->value);
         $this->assertEquals("80.00", $refundLine->basePrice->value);
-        $this->assertEquals("VAT", $refundLine->taxName);
-        $this->assertEquals("20.00", $refundLine->taxPercentage);
-        $this->assertEquals("20.00", $refundLine->taxAmount->value);
-        $this->assertEquals("EUR", $refundLine->taxAmount->currency);
+        $this->assertEquals("VAT", $refundLine->taxes->taxes[0]->name);
+        $this->assertEquals("20.00", $refundLine->taxes->taxes[0]->percentage);
+        $this->assertEquals("16.00", $refundLine->taxes->taxes[0]->amount->value);
+        $this->assertEquals("EUR", $refundLine->taxes->taxes[0]->amount->currency);
     }
 
     /** @test */

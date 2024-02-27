@@ -10,6 +10,7 @@ use Vatly\API\Resources\Links\BaseLinksResource;
 use Vatly\API\Resources\Links\LinksResourceFactory;
 use Vatly\API\Types\Address;
 use Vatly\API\Types\Money;
+use Vatly\API\Types\TaxesCollection;
 use Vatly\API\VatlyApiClient;
 
 #[\AllowDynamicProperties]
@@ -60,6 +61,11 @@ class ResourceFactory
                 case 'total':
                 case 'subtotal':
                     $resource->{$property} = Money::createResourceFromApiResult($value);
+
+                    break;
+
+                case 'taxes':
+                    $resource->{$property} = TaxesCollection::createResourceFromApiResult($value);
 
                     break;
 
