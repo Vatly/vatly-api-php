@@ -5,6 +5,7 @@ namespace Vatly\API\Resources;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Links\OrderLinks;
 use Vatly\API\Types\Address;
+use Vatly\API\Types\Link;
 use Vatly\API\Types\Money;
 use Vatly\API\Types\OrderStatus;
 use Vatly\API\Types\TaxesCollection;
@@ -150,5 +151,10 @@ class Order extends BaseResource
     public function fullRefund(array $data)
     {
         return $this->apiClient->orderRefunds->createFullRefundForOrderId($this->id, $data);
+    }
+
+    public function requestAddressUpdateLink(array $data = []): Link
+    {
+        return $this->apiClient->orders->requestAddressUpdateLink($this->id, $data);
     }
 }

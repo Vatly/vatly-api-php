@@ -7,6 +7,7 @@ use Vatly\API\Resources\Order;
 use Vatly\API\Resources\OrderCollection;
 use Vatly\API\Resources\OrderLine;
 use Vatly\API\Types\OrderStatus;
+use Vatly\API\VatlyApiClient;
 
 class OrderEndpointTest extends BaseEndpointTest
 {
@@ -295,5 +296,27 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertInstanceOf(Order::class, $order);
         $this->assertEquals('order', $order->resource);
         $this->assertEquals('order_456', $order->id);
+    }
+
+    /** @test */
+    public function can_get_order_update_address_link(): void
+    {
+        $orderId = 'order_dummy_id';
+        $responseBodyArray = [
+            'href' => self::API_ENDPOINT_URL."/customer/invoices/$orderId?editable=true&signature=1234567890abcdef",
+            'type' => 'text/html',
+        ];
+
+        $this->httpClient->setSendReturnObjectFromArray($responseBodyArray);
+
+        $response = $this->client->orders->requestAddressUpdateLink($orderId, []);
+
+        $this->assertWasSentOnly(
+            VatlyApiClient::HTTP_POST,
+            self::API_ENDPOINT_URL.'/orders/'.$orderId.'/request-address-update-link',
+            [],
+            null
+        );
+        $this->assertEquals(self::API_ENDPOINT_URL."/customer/invoices/$orderId?editable=true&signature=1234567890abcdef", $response->href);
     }
 }
