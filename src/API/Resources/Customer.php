@@ -2,6 +2,7 @@
 
 namespace Vatly\API\Resources;
 
+use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Resources\Links\CustomerLinks;
 
 class Customer extends BaseResource
@@ -51,4 +52,20 @@ class Customer extends BaseResource
     public $metadata;
 
     public CustomerLinks $links;
+
+    /**
+     * @throws ApiException
+     */
+    public function subscriptions()
+    {
+        return $this->apiClient->customerSubscriptions->pageForCustomerId($this->id);
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function subscription(string $subscriptionId, array $parameters = [])
+    {
+        return $this->apiClient->customerSubscriptions->getForCustomerId($this->id, $subscriptionId, $parameters);
+    }
 }

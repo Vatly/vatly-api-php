@@ -7,11 +7,13 @@ namespace Vatly\API;
 use Vatly\API\Endpoints\ChargebackEndpoint;
 use Vatly\API\Endpoints\CheckoutEndpoint;
 use Vatly\API\Endpoints\CustomerEndpoint;
+use Vatly\API\Endpoints\CustomerSubscriptionEndpoint;
 use Vatly\API\Endpoints\OneOffProductEndpoint;
 use Vatly\API\Endpoints\OrderChargebackEndpoint;
 use Vatly\API\Endpoints\OrderEndpoint;
 use Vatly\API\Endpoints\OrderRefundEndpoint;
 use Vatly\API\Endpoints\RefundEndpoint;
+use Vatly\API\Endpoints\SubscriptionEndpoint;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Exceptions\HttpAdapterDoesNotSupportDebuggingException;
 use Vatly\API\HttpClient\DefaultHttpClientFactory;
@@ -71,10 +73,12 @@ class VatlyApiClient
     public OneOffProductEndpoint $oneOffProducts;
 
     public CustomerEndpoint $customers;
+    public CustomerSubscriptionEndpoint $customerSubscriptions;
     public ChargebackEndpoint $chargebacks;
     public OrderChargebackEndpoint $orderChargebacks;
     public RefundEndpoint $refunds;
     public OrderRefundEndpoint $orderRefunds;
+    public SubscriptionEndpoint $subscriptions;
 
     /**
      * @throws \Vatly\API\Exceptions\IncompatiblePlatformException
@@ -109,6 +113,8 @@ class VatlyApiClient
         $this->orderChargebacks = new OrderChargebackEndpoint($this);
         $this->refunds = new RefundEndpoint($this);
         $this->orderRefunds = new OrderRefundEndpoint($this);
+        $this->subscriptions = new SubscriptionEndpoint($this);
+        $this->customerSubscriptions = new CustomerSubscriptionEndpoint($this);
     }
 
     protected function initializeVersionString(): void
