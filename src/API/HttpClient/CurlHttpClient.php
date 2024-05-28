@@ -67,7 +67,7 @@ class CurlHttpClient implements HttpClientInterface
      * @return object|null
      * @throws \Vatly\API\Exceptions\ApiException
      */
-    protected function attemptRequest(string $httpMethod, string $url, array $headers, string $httpBody): ?object
+    protected function attemptRequest(string $httpMethod, string $url, array $headers, ?string $httpBody): ?object
     {
         $curl = curl_init($url);
         $headers["Content-Type"] = "application/json";
@@ -181,7 +181,7 @@ class CurlHttpClient implements HttpClientInterface
      * @return object|null
      * @throws \Vatly\Api\Exceptions\ApiException
      */
-    protected function parseResponseBody(string $response, int $statusCode, string $httpBody): ?object
+    protected function parseResponseBody(string $response, int $statusCode, ?string $httpBody): ?object
     {
         if (empty($response)) {
             if ($statusCode === VatlyApiClient::HTTP_NO_CONTENT) {
