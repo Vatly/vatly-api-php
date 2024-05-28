@@ -203,7 +203,7 @@ class CurlHttpClient implements HttpClientInterface
         }
 
         if ($statusCode >= 400) {
-            $message = "Error executing API call ({$body->status}: {$body->title}): {$body->detail}";
+            $message = "Error {$statusCode} executing API call: {$body->message})";
 
             $field = null;
 
