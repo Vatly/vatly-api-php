@@ -165,7 +165,7 @@ class VatlyApiClient
     {
         $apiKey = trim($apiKey);
 
-        if (! preg_match('/^(live|test)_[\w\|]{18,}$/', $apiKey)) {
+        if (! preg_match('/^(live|test)_[\w|]{18,}$/', $apiKey)) {
             throw new ApiException("Invalid API key: '{$apiKey}'. An API key must start with 'test_' or 'live_' and must be at least 18 characters long.");
         }
 
@@ -200,7 +200,7 @@ class VatlyApiClient
      * @return object|null
      * @throws \Vatly\API\Exceptions\ApiException
      */
-    public function performHttpCallToFullUrl($httpMethod, $url, $httpBody = null): ?object
+    public function performHttpCallToFullUrl(string $httpMethod, string $url, ?string $httpBody = null): ?object
     {
         if (empty($this->apiKey)) {
             throw new ApiException("You have not set an API key. Please use setApiKey() to set the API key.");
@@ -229,7 +229,7 @@ class VatlyApiClient
      *
      * @throws \Vatly\Api\Exceptions\HttpAdapterDoesNotSupportDebuggingException
      */
-    public function enableDebugging()
+    public function enableDebugging(): void
     {
         if (
             ! method_exists($this->httpClient, 'supportsDebugging')
@@ -249,7 +249,7 @@ class VatlyApiClient
      *
      * @throws \Vatly\Api\Exceptions\HttpAdapterDoesNotSupportDebuggingException
      */
-    public function disableDebugging()
+    public function disableDebugging(): void
     {
         if (
             ! method_exists($this->httpClient, 'supportsDebugging')
