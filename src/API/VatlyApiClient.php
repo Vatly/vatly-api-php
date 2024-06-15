@@ -14,6 +14,7 @@ use Vatly\API\Endpoints\OrderEndpoint;
 use Vatly\API\Endpoints\OrderRefundEndpoint;
 use Vatly\API\Endpoints\RefundEndpoint;
 use Vatly\API\Endpoints\SubscriptionEndpoint;
+use Vatly\API\Endpoints\SubscriptionPlanEndpoint;
 use Vatly\API\Exceptions\ApiException;
 use Vatly\API\Exceptions\HttpAdapterDoesNotSupportDebuggingException;
 use Vatly\API\HttpClient\DefaultHttpClientFactory;
@@ -71,6 +72,7 @@ class VatlyApiClient
     public OrderEndpoint $orders;
 
     public OneOffProductEndpoint $oneOffProducts;
+    public SubscriptionPlanEndpoint $subscriptionPlans;
 
     public CustomerEndpoint $customers;
     public CustomerSubscriptionEndpoint $customerSubscriptions;
@@ -108,6 +110,7 @@ class VatlyApiClient
         $this->checkouts = new CheckoutEndpoint($this);
         $this->orders = new OrderEndpoint($this);
         $this->oneOffProducts = new OneOffProductEndpoint($this);
+        $this->subscriptionPlans = new SubscriptionPlanEndpoint($this);
         $this->customers = new CustomerEndpoint($this);
         $this->chargebacks = new ChargebackEndpoint($this);
         $this->orderChargebacks = new OrderChargebackEndpoint($this);
