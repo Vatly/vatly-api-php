@@ -4,13 +4,13 @@ namespace Vatly\API\Types;
 
 class SubscriptionStatus
 {
-    const ACTIVE = "active";
+    public const ACTIVE = "active";
 
-    const CREATED = "created";
+    public const CREATED = "created";
 
-    const CANCELED = "canceled";
+    public const CANCELED = "canceled";
 
-    const CANCELING = "canceling";
+    public const CANCELING = "canceling";
 
-    const TRIAL = "trial";
+    public const TRIAL = "trial";
 }

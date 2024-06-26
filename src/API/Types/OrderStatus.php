@@ -7,31 +7,31 @@ class OrderStatus
     /**
      * The order has just been created.
      */
-    const STATUS_CREATED = "created";
+    public const STATUS_CREATED = "created";
 
     /**
      * The order has been paid.
      */
-    const STATUS_PAID = "paid";
+    public const STATUS_PAID = "paid";
 
 
     /**
      * The order has been canceled.
      */
-    const STATUS_CANCELED = "canceled";
+    public const STATUS_CANCELED = "canceled";
 
     /**
      * The order is completed.
      */
-    const STATUS_COMPLETED = "completed";
+    public const STATUS_COMPLETED = "completed";
 
     /**
      * The order is expired.
      */
-    const STATUS_EXPIRED = "expired";
+    public const STATUS_EXPIRED = "expired";
 
     /**
      * The order is pending.
      */
-    const STATUS_PENDING = "pending";
+    public const STATUS_PENDING = "pending";
 }

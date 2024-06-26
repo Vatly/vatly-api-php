@@ -7,31 +7,31 @@ class CheckoutStatus
     /**
      * The checkout has just been created.
      */
-    const STATUS_CREATED = "created";
+    public const STATUS_CREATED = "created";
 
     /**
      * The checkout has been paid.
      */
-    const STATUS_PAID = "paid";
+    public const STATUS_PAID = "paid";
 
 
     /**
      * The checkout has been canceled.
      */
-    const STATUS_CANCELED = "canceled";
+    public const STATUS_CANCELED = "canceled";
 
     /**
      * The checkout is completed.
      */
-    const STATUS_COMPLETED = "completed";
+    public const STATUS_COMPLETED = "completed";
 
     /**
      * The checkout is expired.
      */
-    const STATUS_EXPIRED = "expired";
+    public const STATUS_EXPIRED = "expired";
 
     /**
      * The checkout is pending.
      */
-    const STATUS_PENDING = "pending";
+    public const STATUS_PENDING = "pending";
 }
