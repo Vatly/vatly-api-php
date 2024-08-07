@@ -94,14 +94,6 @@ class Subscription extends BaseResource
     /**
      * @throws ApiException
      */
-    public function swap(string $newSubscriptionPlanId, array $data = []): ?BaseResource
-    {
-        return $this->apiClient->subscriptions->swap($this->id, $newSubscriptionPlanId, $data);
-    }
-
-    /**
-     * @throws ApiException
-     */
     public function cancel(array $data = []): ?BaseResource
     {
         return $this->apiClient->subscriptions->cancel($this->id, $data);
