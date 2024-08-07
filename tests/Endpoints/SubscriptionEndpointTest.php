@@ -45,7 +45,7 @@ class SubscriptionEndpointTest extends BaseEndpointTest
         $this->assertEquals('New York', $subscription->billingAddress->city);
         $this->assertTrue($subscription->isActive());
         $this->assertFalse($subscription->isCanceled());
-        $this->assertFalse($subscription->isCanceling());
+        $this->assertFalse($subscription->isOnGracePeriod());
         $this->assertFalse($subscription->isTrial());
 
         $this->assertEquals(self::API_ENDPOINT_URL. '/subscriptions/' . $subscriptionId, $subscription->links->self->href);
@@ -170,23 +170,6 @@ class SubscriptionEndpointTest extends BaseEndpointTest
         $this->assertEquals('subscription_789', $subscription->id);
 
         $this->assertNull($nextProductCollection->next());
-    }
-
-    /** @test */
-    public function can_swap_subscription()
-    {
-        /** @var Subscription $subscription */
-        $subscription = ResourceFactory::createResourceFromApiResult((object) $this->subscriptionDemoData('subscription_123'), new Subscription($this->client));
-
-        $this->httpClient->setSendReturnObjectFromArray($this->subscriptionDemoData('subscription_123', SubscriptionStatus::CANCELING));
-        $subscription->swap('subscription_plan_12345');
-
-        $this->assertWasSentOnly(
-            VatlyApiClient::HTTP_PATCH,
-            self::API_ENDPOINT_URL.'/subscriptions/subscription_123/swap',
-            [],
-            '{"subscriptionPlanId":"subscription_plan_12345"}'
-        );
     }
 
     /** @test */

@@ -8,7 +8,6 @@ use Vatly\API\Resources\BaseResource;
 use Vatly\API\Resources\BaseResourcePage;
 use Vatly\API\Resources\Customer;
 use Vatly\API\Resources\Links\PaginationLinks;
-use Vatly\API\Resources\ResourceFactory;
 use Vatly\API\Resources\Subscription;
 use Vatly\API\Resources\SubscriptionCollection;
 use Vatly\API\Types\Link;
@@ -106,23 +105,6 @@ class SubscriptionEndpoint extends BaseEndpoint
         $this->validateSubscriptionId($subscriptionId);
 
         return $this->rest_delete($subscriptionId, $data);
-    }
-
-    /**
-     * @return BaseResource|Subscription
-     * @throws ApiException
-     */
-    public function swap(string $subscriptionId, string $newSubscriptionPlanId, array $data = []): ?BaseResource
-    {
-        $this->validateSubscriptionId($subscriptionId);
-
-        $resource = "{$this->getResourcePath()}/" . urlencode($subscriptionId) . "/swap";
-
-        $data['subscriptionPlanId'] = $newSubscriptionPlanId;
-
-        $result = $this->client->performHttpCall(self::REST_UPDATE, $resource, json_encode($data));
-
-        return ResourceFactory::createResourceFromApiResult($result, new Subscription($this->client));
     }
 
     /**

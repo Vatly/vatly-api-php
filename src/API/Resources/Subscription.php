@@ -117,9 +117,9 @@ class Subscription extends BaseResource
         return $this->status === SubscriptionStatus::ACTIVE;
     }
 
-    public function isCanceling(): bool
+    public function isOnGracePeriod(): bool
     {
-        return $this->status === SubscriptionStatus::CANCELING;
+        return $this->status === SubscriptionStatus::ON_GRACE_PERIOD;
     }
 
     public function isTrial(): bool
