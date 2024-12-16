@@ -209,7 +209,7 @@ class OrderEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/orders?starting_after=order_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/orders?startingAfter=order_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
@@ -232,7 +232,7 @@ class OrderEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/orders', $orderCollection->links->self->href);
         $this->assertEquals('application/hal+json', $orderCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders?starting_after=order_next_dummy_id', $orderCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders?startingAfter=order_next_dummy_id', $orderCollection->links->next->href);
         $this->assertEquals('application/hal+json', $orderCollection->links->next->type);
         $this->assertNull($orderCollection->links->previous);
 
@@ -250,12 +250,12 @@ class OrderEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL.'/orders?starting_after=order_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/orders?startingAfter=order_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => null,
                     'previous' => [
-                        'href' => self::API_ENDPOINT_URL.'/orders?ending_before=order_previous_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/orders?endingBefore=order_previous_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                 ],
@@ -267,11 +267,11 @@ class OrderEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL.'/orders?starting_after=order_previous_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/orders?startingAfter=order_previous_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => [
-                        'href' => self::API_ENDPOINT_URL.'/orders?starting_after=order_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/orders?startingAfter=order_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'previous' => [

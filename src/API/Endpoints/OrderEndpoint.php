@@ -38,12 +38,12 @@ class OrderEndpoint extends BaseEndpoint
      * @throws ApiException
      */
     public function page(
-        ?string $starting_after = null,
-        ?string $ending_before = null,
+        ?string $startingAfter = null,
+        ?string $endingBefore = null,
         ?int $limit = null,
         array $parameters = []
     ): BaseResourcePage {
-        return $this->rest_list($starting_after, $ending_before, $limit, $parameters);
+        return $this->rest_list($startingAfter, $endingBefore, $limit, $parameters);
     }
 
     public function requestAddressUpdateLink(string $id, array $data = []): Link

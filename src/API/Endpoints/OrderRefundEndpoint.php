@@ -41,14 +41,14 @@ class OrderRefundEndpoint extends BaseEndpoint
      */
     public function pageForOrderId(
         string $orderId,
-        ?string $starting_after = null,
-        ?string $ending_before = null,
+        ?string $startingAfter = null,
+        ?string $endingBefore = null,
         ?int $limit = null,
         array $parameters = []
     ) {
         $this->parentId = $orderId;
 
-        return parent::rest_list($starting_after, $ending_before, $limit, $parameters);
+        return parent::rest_list($startingAfter, $endingBefore, $limit, $parameters);
     }
 
     /**

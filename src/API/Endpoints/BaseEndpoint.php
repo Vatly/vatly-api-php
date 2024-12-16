@@ -226,8 +226,8 @@ abstract class BaseEndpoint
     /**
      * Get a page of objects from the REST API.
      *
-     * @param string|null $starting_after
-     * @param string|null $ending_before
+     * @param string|null $startingAfter
+     * @param string|null $endingBefore
      * @param int|null $limit
      * @param array $filters
      *
@@ -235,20 +235,20 @@ abstract class BaseEndpoint
      * @throws \Vatly\API\Exceptions\ApiException
      */
     protected function rest_list(
-        ?string $starting_after = null,
-        ?string $ending_before = null,
+        ?string $startingAfter = null,
+        ?string $endingBefore = null,
         ?int $limit = null,
         array $filters = []
     ): BaseResourcePage {
-        if ($starting_after !== null && $ending_before !== null) {
-            throw new ApiException("You can only use one of starting_after or ending_before.");
+        if ($startingAfter !== null && $endingBefore !== null) {
+            throw new ApiException("You can only use one of startingAfter or endingBefore.");
         }
 
         $apiPath = $this->getResourcePath() . $this->buildQueryString(
             array_merge(
                 [
-                    "starting_after" => $starting_after,
-                    "ending_before" => $ending_before,
+                    "startingAfter" => $startingAfter,
+                    "endingBefore" => $endingBefore,
                     "limit" => $limit,
                 ],
                 $filters

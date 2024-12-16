@@ -40,13 +40,13 @@ class CustomerSubscriptionEndpoint extends BaseEndpoint
      */
     public function pageForCustomerId(
         string $customerId,
-        ?string $starting_after = null,
-        ?string $ending_before = null,
+        ?string $startingAfter = null,
+        ?string $endingBefore = null,
         ?int $limit = null,
         array $parameters = []
     ) {
         $this->parentId = $customerId;
 
-        return parent::rest_list($starting_after, $ending_before, $limit, $parameters);
+        return parent::rest_list($startingAfter, $endingBefore, $limit, $parameters);
     }
 }

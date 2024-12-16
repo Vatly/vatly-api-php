@@ -67,7 +67,7 @@ class OrderRefundEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/refunds?starting_after=refund_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/refunds?startingAfter=refund_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
@@ -88,7 +88,7 @@ class OrderRefundEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/refunds', $refundCollection->links->self->href);
         $this->assertEquals('application/hal+json', $refundCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/refunds?starting_after=refund_next_dummy_id', $refundCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/refunds?startingAfter=refund_next_dummy_id', $refundCollection->links->next->href);
         $this->assertEquals('application/hal+json', $refundCollection->links->next->type);
         $this->assertNull($refundCollection->links->previous);
 
@@ -119,12 +119,12 @@ class OrderRefundEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL.'/refunds?starting_after=refund_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/refunds?startingAfter=refund_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => null,
                     'previous' => [
-                        'href' => self::API_ENDPOINT_URL.'/refunds?ending_before=refund_previous_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/refunds?endingBefore=refund_previous_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                 ],
@@ -139,11 +139,11 @@ class OrderRefundEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL.'/refunds?starting_after=refund_previous_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/refunds?startingAfter=refund_previous_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => [
-                        'href' => self::API_ENDPOINT_URL.'/refunds?starting_after=refund_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/refunds?startingAfter=refund_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'previous' => [
@@ -182,7 +182,7 @@ class OrderRefundEndpointTest extends BaseEndpointTest
 
         $refund = $this->client->orderRefunds->createForOrderId('original_order_dummy_id', [
             'items' => [
-                'item_id' => 'item_dummy_id',
+                'itemId' => 'item_dummy_id',
                 'amount' => [
                     'value' => '100.00',
                     'currency' => 'eur',
@@ -198,7 +198,7 @@ class OrderRefundEndpointTest extends BaseEndpointTest
             VatlyApiClient::HTTP_POST,
             self::API_ENDPOINT_URL.'/orders/original_order_dummy_id/refunds',
             [],
-            '{"items":{"item_id":"item_dummy_id","amount":{"value":"100.00","currency":"eur"},"description":"Item description"},"metadata":{"refund_id":"123456"}}'
+            '{"items":{"itemId":"item_dummy_id","amount":{"value":"100.00","currency":"eur"},"description":"Item description"},"metadata":{"refund_id":"123456"}}'
         );
 
         $this->assertInstanceOf(Refund::class, $refund);
@@ -247,7 +247,7 @@ class OrderRefundEndpointTest extends BaseEndpointTest
 
         $refund = $order->refund([
             'items' => [
-                'item_id' => 'item_dummy_id',
+                'itemId' => 'item_dummy_id',
                 'amount' => [
                     'value' => '100.00',
                     'currency' => 'eur',
@@ -263,7 +263,7 @@ class OrderRefundEndpointTest extends BaseEndpointTest
             VatlyApiClient::HTTP_POST,
             self::API_ENDPOINT_URL.'/orders/original_order_dummy_id/refunds',
             [],
-            '{"items":{"item_id":"item_dummy_id","amount":{"value":"100.00","currency":"eur"},"description":"Item description"},"metadata":{"refund_id":"123456"}}'
+            '{"items":{"itemId":"item_dummy_id","amount":{"value":"100.00","currency":"eur"},"description":"Item description"},"metadata":{"refund_id":"123456"}}'
         );
 
         $this->assertInstanceOf(Refund::class, $refund);

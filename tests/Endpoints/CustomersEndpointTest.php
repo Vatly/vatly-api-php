@@ -225,11 +225,11 @@ class CustomersEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d19',
+                    'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d19',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => [
-                    'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                    'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d18',
                     'type' => 'application/hal+json',
                 ],
             ],
@@ -259,8 +259,8 @@ class CustomersEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d18', $customer1->links->self->href);
         $this->assertEquals(self::API_ENDPOINT_URL . '/customers/customer_78b146a7de7d417e9d68d7e6ef193d19', $customer2->links->self->href);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d19', $customers->links->next->href);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d18', $customers->links->previous->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d19', $customers->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d18', $customers->links->previous->href);
     }
 
     /** @test */
@@ -278,11 +278,11 @@ class CustomersEndpointTest extends BaseEndpointTest
                         'type' => 'application/hal+json',
                     ],
                     'next' => [
-                        'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                        'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d18',
                         'type' => 'application/hal+json',
                     ],
                     'previous' => [
-                        'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_previous_id',
+                        'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_previous_id',
                         'type' => 'application/hal+json',
                     ],
                 ],
@@ -308,12 +308,12 @@ class CustomersEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                        'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d18',
                         'type' => 'application/hal+json',
                     ],
                     'next' => null,
                     'previous' => [
-                        'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d18',
+                        'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d18',
                         'type' => 'application/hal+json',
                     ],
                 ],
@@ -330,7 +330,7 @@ class CustomersEndpointTest extends BaseEndpointTest
 
         $this->assertWasSent(
             VatlyApiClient::HTTP_GET,
-            self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d18',
+            self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d18',
             [],
             null,
         );
@@ -338,7 +338,7 @@ class CustomersEndpointTest extends BaseEndpointTest
         $customer = $nextCustomers[0];
 
         $this->assertEquals(1, $nextCustomers->count);
-        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d18', $nextCustomers->links->self->href);
+        $this->assertEquals(self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d18', $nextCustomers->links->self->href);
         $this->assertEquals('application/hal+json', $nextCustomers->links->self->type);
         $this->assertNull($nextCustomers->next());
 
