@@ -65,7 +65,7 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?starting_after=chargeback_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?startingAfter=chargeback_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => null,
@@ -86,7 +86,7 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks', $chargebackCollection->links->self->href);
         $this->assertEquals('application/hal+json', $chargebackCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?starting_after=chargeback_next_dummy_id', $chargebackCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/orders/'.$originalOrderId.'/chargebacks?startingAfter=chargeback_next_dummy_id', $chargebackCollection->links->next->href);
         $this->assertEquals('application/hal+json', $chargebackCollection->links->next->type);
         $this->assertNull($chargebackCollection->links->previous);
 
@@ -117,12 +117,12 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?startingAfter=chargeback_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => null,
                     'previous' => [
-                        'href' => self::API_ENDPOINT_URL.'/chargebacks?ending_before=chargeback_previous_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?endingBefore=chargeback_previous_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                 ],
@@ -137,11 +137,11 @@ class OrderChargebackEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_previous_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?startingAfter=chargeback_previous_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => [
-                        'href' => self::API_ENDPOINT_URL.'/chargebacks?starting_after=chargeback_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL.'/chargebacks?startingAfter=chargeback_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'previous' => [

@@ -60,11 +60,11 @@ class OneOffProductEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/one-off-products?starting_after=one_off_product_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/one-off-products?startingAfter=one_off_product_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => [
-                    'href' => self::API_ENDPOINT_URL.'/one-off-products?ending_before=one_off_product_previous_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/one-off-products?endingBefore=one_off_product_previous_dummy_id',
                     'type' => 'application/hal+json',
                 ],
             ],
@@ -86,9 +86,9 @@ class OneOffProductEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products', $productCollection->links->self->href);
         $this->assertEquals('application/hal+json', $productCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?starting_after=one_off_product_next_dummy_id', $productCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?startingAfter=one_off_product_next_dummy_id', $productCollection->links->next->href);
         $this->assertEquals('application/hal+json', $productCollection->links->next->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?ending_before=one_off_product_previous_dummy_id', $productCollection->links->previous->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/one-off-products?endingBefore=one_off_product_previous_dummy_id', $productCollection->links->previous->href);
         $this->assertEquals('application/hal+json', $productCollection->links->previous->type);
     }
 
@@ -108,7 +108,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
                         'type' => 'application/hal+json',
                     ],
                     'next' => [
-                        'href' => self::API_ENDPOINT_URL . '/one-off-products?starting_after=one_off_product_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL . '/one-off-products?startingAfter=one_off_product_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'previous' => null,
@@ -121,7 +121,7 @@ class OneOffProductEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL . '/one-off-products?starting_after=one_off_product_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL . '/one-off-products?startingAfter=one_off_product_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => null,

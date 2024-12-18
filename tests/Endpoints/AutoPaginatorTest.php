@@ -24,7 +24,7 @@ class AutoPaginatorTest extends BaseEndpointTest
                             'type' => 'application/hal+json',
                         ],
                         'next' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d19',
+                            'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d19',
                             'type' => 'application/hal+json',
                         ],
                         'previous' => null,
@@ -38,15 +38,15 @@ class AutoPaginatorTest extends BaseEndpointTest
                     ],
                     'links' => [
                         'self' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d19',
+                            'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d19',
                             'type' => 'application/hal+json',
                         ],
                         'next' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d21',
+                            'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d21',
                             'type' => 'application/hal+json',
                         ],
                         'previous' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d20',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d20',
                             'type' => 'application/hal+json',
                         ],
                     ],
@@ -59,12 +59,12 @@ class AutoPaginatorTest extends BaseEndpointTest
                     ],
                     'links' => [
                         'self' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d21',
+                            'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d21',
                             'type' => 'application/hal+json',
                         ],
                         'next' => null,
                         'previous' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d22',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d22',
                             'type' => 'application/hal+json',
                         ],
                     ],
@@ -101,12 +101,12 @@ class AutoPaginatorTest extends BaseEndpointTest
                     ],
                     'links' => [
                         'self' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d24',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d24',
                             'type' => 'application/hal+json',
                         ],
                         'next' => null,
                         'previous' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d22',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d22',
                             'type' => 'application/hal+json',
                         ],
                     ],
@@ -119,15 +119,15 @@ class AutoPaginatorTest extends BaseEndpointTest
                     ],
                     'links' => [
                         'self' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d22',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d22',
                             'type' => 'application/hal+json',
                         ],
                         'next' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d21',
+                            'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d21',
                             'type' => 'application/hal+json',
                         ],
                         'previous' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d20',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d20',
                             'type' => 'application/hal+json',
                         ],
                     ],
@@ -140,11 +140,11 @@ class AutoPaginatorTest extends BaseEndpointTest
                     ],
                     'links' => [
                         'self' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?ending_before=customer_78b146a7de7d417e9d68d7e6ef193d20',
+                            'href' => self::API_ENDPOINT_URL . '/customers?endingBefore=customer_78b146a7de7d417e9d68d7e6ef193d20',
                             'type' => 'application/hal+json',
                         ],
                         'next' => [
-                            'href' => self::API_ENDPOINT_URL . '/customers?starting_after=customer_78b146a7de7d417e9d68d7e6ef193d19',
+                            'href' => self::API_ENDPOINT_URL . '/customers?startingAfter=customer_78b146a7de7d417e9d68d7e6ef193d19',
                             'type' => 'application/hal+json',
                         ],
                         'previous' => null,

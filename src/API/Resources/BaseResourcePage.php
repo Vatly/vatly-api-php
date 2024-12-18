@@ -121,7 +121,7 @@ abstract class BaseResourcePage extends ArrayObject
 
     private function pointsToNextItems(): bool
     {
-        return ! str_contains($this->links->self->href, 'ending_before');
+        return ! str_contains($this->links->self->href, 'endingBefore');
     }
 
     /**

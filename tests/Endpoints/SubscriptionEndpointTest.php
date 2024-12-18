@@ -74,11 +74,11 @@ class SubscriptionEndpointTest extends BaseEndpointTest
                     'type' => 'application/hal+json',
                 ],
                 'next' => [
-                    'href' => self::API_ENDPOINT_URL.'/subscriptions?starting_after=subscription_next_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/subscriptions?startingAfter=subscription_next_dummy_id',
                     'type' => 'application/hal+json',
                 ],
                 'previous' => [
-                    'href' => self::API_ENDPOINT_URL.'/subscriptions?ending_before=subscription_previous_dummy_id',
+                    'href' => self::API_ENDPOINT_URL.'/subscriptions?endingBefore=subscription_previous_dummy_id',
                     'type' => 'application/hal+json',
                 ],
             ],
@@ -100,9 +100,9 @@ class SubscriptionEndpointTest extends BaseEndpointTest
 
         $this->assertEquals(self::API_ENDPOINT_URL.'/subscriptions', $subscriptionCollection->links->self->href);
         $this->assertEquals('application/hal+json', $subscriptionCollection->links->self->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/subscriptions?starting_after=subscription_next_dummy_id', $subscriptionCollection->links->next->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/subscriptions?startingAfter=subscription_next_dummy_id', $subscriptionCollection->links->next->href);
         $this->assertEquals('application/hal+json', $subscriptionCollection->links->next->type);
-        $this->assertEquals(self::API_ENDPOINT_URL.'/subscriptions?ending_before=subscription_previous_dummy_id', $subscriptionCollection->links->previous->href);
+        $this->assertEquals(self::API_ENDPOINT_URL.'/subscriptions?endingBefore=subscription_previous_dummy_id', $subscriptionCollection->links->previous->href);
         $this->assertEquals('application/hal+json', $subscriptionCollection->links->previous->type);
 
 
@@ -130,7 +130,7 @@ class SubscriptionEndpointTest extends BaseEndpointTest
                         'type' => 'application/hal+json',
                     ],
                     'next' => [
-                        'href' => self::API_ENDPOINT_URL . '/subscriptions?starting_after=subscription_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL . '/subscriptions?startingAfter=subscription_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'previous' => null,
@@ -143,7 +143,7 @@ class SubscriptionEndpointTest extends BaseEndpointTest
                 ],
                 'links' => [
                     'self' => [
-                        'href' => self::API_ENDPOINT_URL . '/subscriptions?starting_after=subscription_next_dummy_id',
+                        'href' => self::API_ENDPOINT_URL . '/subscriptions?startingAfter=subscription_next_dummy_id',
                         'type' => 'application/hal+json',
                     ],
                     'next' => null,
