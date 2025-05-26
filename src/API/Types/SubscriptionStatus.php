@@ -10,7 +10,7 @@ class SubscriptionStatus
 
     public const CANCELED = "canceled";
 
-    public const CANCELING = "canceling";
+    public const ON_GRACE_PERIOD = "on_grace_period";
 
     public const TRIAL = "trial";
 }
