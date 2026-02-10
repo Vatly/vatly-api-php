@@ -1,0 +1,195 @@
+export const metadata = {
+  title: 'Refunds (PHP SDK)',
+  description:
+    'Learn how to create and manage refunds using the Vatly PHP SDK.',
+}
+
+# Refunds
+
+Refunds allow you to return money to your customers for orders. {{ className: 'lead' }}
+
+## The Refund Resource
+
+Below you'll find all properties for the Vatly Refund resource.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Unique identifier for the refund (`ref_...`).
+  </Property>
+  <Property name="status" type="string">
+    The status: `pending`, `succeeded`, or `failed`.
+  </Property>
+  <Property name="orderId" type="string">
+    The order ID being refunded.
+  </Property>
+  <Property name="amount" type="integer">
+    Refund amount in cents.
+  </Property>
+  <Property name="currency" type="string">
+    Three-letter ISO currency code.
+  </Property>
+  <Property name="reason" type="string|null">
+    Reason for the refund.
+  </Property>
+  <Property name="testmode" type="bool">
+    Whether this is a test refund.
+  </Property>
+  <Property name="metadata" type="array">
+    Your custom metadata.
+  </Property>
+  <Property name="createdAt" type="string">
+    Creation timestamp (ISO 8601).
+  </Property>
+</Properties>
+
+---
+
+## Create a refund {{ tag: 'POST', label: '/v1/refunds' }}
+
+<Row>
+  <Col>
+
+    Create a refund for an order.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="orderId" type="string">
+        The ID of the order to refund.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="amount" type="integer">
+        Partial refund amount in cents (omit for full refund).
+      </Property>
+      <Property name="reason" type="string">
+        Reason for the refund.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/refunds">
+
+    ```php {{ title: 'PHP' }}
+    // Full refund
+    $refund = $vatly->refunds->create([
+        'orderId' => 'ord_abc123',
+        'reason' => 'Customer requested refund',
+    ]);
+
+    // Partial refund
+    $refund = $vatly->refunds->create([
+        'orderId' => 'ord_abc123',
+        'amount' => 1000,  // Refund €10.00
+    ]);
+
+    echo $refund->id;
+    echo $refund->status;
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Retrieve a refund {{ tag: 'GET', label: '/v1/refunds/:id' }}
+
+<Row>
+  <Col>
+
+    Retrieve a refund by its ID.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/refunds/:id">
+
+    ```php {{ title: 'PHP' }}
+    $refund = $vatly->refunds->get('ref_abc123');
+
+    echo $refund->status;
+    echo $refund->amount / 100 . ' ' . $refund->currency;
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## List all refunds {{ tag: 'GET', label: '/v1/refunds' }}
+
+<Row>
+  <Col>
+
+    Retrieve a paginated list of all refunds.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="limit" type="integer">
+        The number of refunds to return (default: 10, max: 100).
+      </Property>
+      <Property name="startingAfter" type="string">
+        A cursor for pagination.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/refunds">
+
+    ```php {{ title: 'PHP' }}
+    $refunds = $vatly->refunds->list();
+
+    foreach ($refunds as $refund) {
+        echo $refund->id . ': ' . $refund->status;
+    }
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Refund statuses
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Refund is being processed |
+| `succeeded` | Refund completed successfully |
+| `failed` | Refund failed |
+
+---
+
+## Helper methods
+
+<Row>
+  <Col>
+
+    The Refund object provides convenient helper methods.
+
+  </Col>
+  <Col sticky>
+
+    ```php {{ title: 'PHP' }}
+    $refund->isPending();    // true if status is 'pending'
+    $refund->isSucceeded();  // true if status is 'succeeded'
+    $refund->isFailed();     // true if status is 'failed'
+    ```
+
+  </Col>
+</Row>

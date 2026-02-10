@@ -1,0 +1,156 @@
+export const metadata = {
+  title: 'Customers (PHP SDK)',
+  description:
+    'Learn how to create and manage customers using the Vatly PHP SDK.',
+}
+
+# Customers
+
+Customers represent your end users who purchase products through Vatly. {{ className: 'lead' }}
+
+## The Customer Resource
+
+Below you'll find all properties for the Vatly Customer resource.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Unique identifier for the customer (`cus_...`).
+  </Property>
+  <Property name="email" type="string">
+    Customer's email address.
+  </Property>
+  <Property name="name" type="string|null">
+    Customer's name.
+  </Property>
+  <Property name="testmode" type="bool">
+    Whether this is a test customer.
+  </Property>
+  <Property name="metadata" type="array">
+    Your custom metadata.
+  </Property>
+  <Property name="createdAt" type="string">
+    Creation timestamp (ISO 8601).
+  </Property>
+</Properties>
+
+---
+
+## Create a customer {{ tag: 'POST', label: '/v1/customers' }}
+
+<Row>
+  <Col>
+
+    Create a new customer.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="email" type="string">
+        The customer's email address.
+      </Property>
+    </Properties>
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="name" type="string">
+        The customer's name.
+      </Property>
+      <Property name="metadata" type="array">
+        Your custom metadata.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/customers">
+
+    ```php {{ title: 'PHP' }}
+    $customer = $vatly->customers->create([
+        'email' => 'john@example.com',
+        'name' => 'John Doe',
+        'metadata' => [
+            'user_id' => '12345',
+        ],
+    ]);
+
+    echo $customer->id;  // cus_abc123
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Retrieve a customer {{ tag: 'GET', label: '/v1/customers/:id' }}
+
+<Row>
+  <Col>
+
+    Retrieve a customer by their ID.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/customers/:id">
+
+    ```php {{ title: 'PHP' }}
+    $customer = $vatly->customers->get('cus_abc123');
+
+    echo $customer->email;
+    echo $customer->name;
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## List all customers {{ tag: 'GET', label: '/v1/customers' }}
+
+<Row>
+  <Col>
+
+    Retrieve a paginated list of all your customers.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="limit" type="integer">
+        The number of customers to return (default: 10, max: 100).
+      </Property>
+      <Property name="startingAfter" type="string">
+        A cursor for pagination. Returns results after this customer ID.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/customers">
+
+    ```php {{ title: 'PHP' }}
+    $customers = $vatly->customers->list();
+
+    foreach ($customers as $customer) {
+        echo $customer->email;
+    }
+
+    // Pagination
+    $customers = $vatly->customers->list([
+        'limit' => 25,
+        'startingAfter' => 'cus_last_id',
+    ]);
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
