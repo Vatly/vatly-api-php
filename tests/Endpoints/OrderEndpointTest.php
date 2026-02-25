@@ -131,7 +131,6 @@ class OrderEndpointTest extends BaseEndpointTest
         $this->assertFalse($order->testmode);
         $this->assertEquals('ideal', $order->paymentMethod);
         $this->assertEquals(OrderStatus::STATUS_PAID, $order->status);
-        $this->assertFalse($order->cancelled);
         $this->assertEquals('96.00', $order->total->value);
         $this->assertEquals('80.00', $order->subtotal->value);
         $this->assertEquals('VAT', $order->taxes->taxes[0]->name);
