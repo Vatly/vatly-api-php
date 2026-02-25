@@ -22,7 +22,7 @@ class RefundEndpointTest extends BaseEndpointTest
             'resource' => 'refund',
             'merchantId' => 'merchant_123',
             'testmode' => false,
-            'status' => RefundStatus::REFUNDED,
+            'status' => RefundStatus::COMPLETED,
             'metadata' => [
                 'refund_id' => '123456',
             ],
@@ -115,7 +115,7 @@ class RefundEndpointTest extends BaseEndpointTest
         $this->assertEquals('order_dummy_id', $refund->orderId);
         $this->assertEquals('original_order_dummy_id', $refund->originalOrderId);
         $this->assertFalse($refund->testmode);
-        $this->assertEquals(RefundStatus::REFUNDED, $refund->status);
+        $this->assertEquals(RefundStatus::COMPLETED, $refund->status);
         $this->assertEquals('96.00', $refund->total->value);
         $this->assertEquals('80.00', $refund->subtotal->value);
         $this->assertEquals('VAT', $refund->taxes->taxes[0]->name);
