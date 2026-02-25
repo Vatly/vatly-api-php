@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger docs sync
-        run: |
-          gh workflow run sync-sdk-docs.yml --repo Vatly/vatly-docs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOCS_DISPATCH_TOKEN }}
+          repository: Vatly/vatly-docs
+          event-type: sync-sdk-docs
